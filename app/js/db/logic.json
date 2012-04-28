@@ -1,0 +1,7 @@
+{"_id": "_design/logic",
+	"views": {
+		"byDate": {
+			"map": "function(doc) {emit(doc.expDate, doc); //TODO avoid emitting doc}" 
+		}
+	}
+}

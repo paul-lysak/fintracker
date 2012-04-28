@@ -1,0 +1,42 @@
+<html>
+<head>
+  <title>FinTracker</title>
+  <link rel="stylesheet" href="js/lib/dojo-release-1.7.1/dijit/themes/claro/claro.css"/>
+  <!-- link rel="stylesheet" href="js/lib/dojo-release-1.6.1/dojox/grid/resources/claroGrid.css"/-->
+  <link rel="stylesheet" href="js/lib/dojo-release-1.7.1/dojox/grid/enhanced/resources/claro/EnhancedGrid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/style.css"/>
+  <script src="js/lib/dojo-release-1.7.1/dojo/dojo.js.uncompressed.js" data-dojo-config="parseOnLoad: true"></script>
+  <script src="js/dbInit.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+  </script>
+</head>
+<body class="claro">
+<div class="title">FinTracker</div>
+<div id="expensesEntry" class="expenses hidden" dojoType="dijit.form.Form">
+<!-- form id="expensesEntryForm" -->
+Enter expenses:<br/>
+Amount:<input type="text" name="amount" class="amount" 
+size="10"
+dojoType="dijit.form.NumberTextBox"
+constraints="{min:0, max: 200000, pattern:'#####0.##'}"
+invalidMessage="Should be number"
+required="true"><br/>
+Date:<input type="text" name="expDate" id="expenseDate"
+dojoType="dijit.form.DateTextBox"
+value="2011-11-01"
+required="true"/><br/>
+Category:<select class="category" id="expenseCategory" 
+	data-dojo-type="dijit.form.Select" data-dojo-props="name: 'category'"></select><br/>
+Comment:<input type="text" name="comment" style="width: 40em" 
+dojoType="dijit.form.TextBox"><br/>
+<input type="button" value="Ok" class="submit"/><br/>
+<!-- /form -->
+</div>
+
+<div id="recentExpenses" class="expensesList hidden">
+</div>
+
+</body>
+</html>
+
