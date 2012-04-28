@@ -97,6 +97,7 @@ function ExpensesEntryForm(element) {
 			}
 			var expense = dojo.formToObject("expensesEntry"); 
 			expensesService.addExpense(expense).then(function(res) {
+				form.setValues({amount: Number.NaN, category: "other", comment: ""}); //reset all fields except of date
 				console.log("exp callback", res);
 			});
 		});
