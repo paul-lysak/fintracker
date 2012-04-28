@@ -31,7 +31,7 @@ function ensureStorageExists(storageName) {
 		error: function(error, ioargs) {
 			if(ioargs.xhr.status == 404) {
 				createStorage(storageName).then(//TODO i beleive it can be simplified
-					function(succ) {console.log("create storage succ"); def.resolve(succ)},
+					function(succ) {def.resolve(succ)},
 					function(err) {def.reject(err)});
 			} else {
 				def.reject(error);

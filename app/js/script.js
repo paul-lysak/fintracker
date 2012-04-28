@@ -1,4 +1,6 @@
+dojo.require("dojo._base.lang");
 dojo.require("dojo.fx");
+dojo.require("dojo.topic");
 dojo.require("dijit.form.Form");
 dojo.require("dijit.form.Select");
 dojo.require("dojox.validate");
@@ -50,7 +52,9 @@ var expensesService = new function() {
 				var p = expensesStore.put(uuid, dojo.toJson(expense)).
 			then(function(put_res) {
 						console.log("expense add success", put_res);
-						def.resolve(put_res);},
+						def.resolve(put_res);
+						dojo.topic.publish("addExpense", expense);
+						},
 					function(put_err) {
 						console.log("expense add fail", put_err);
 						def.reject(put_err);}
@@ -101,8 +105,9 @@ function ExpensesEntryForm(element) {
 
 function RecentExpensesTable(element) {
 	dojo.removeClass(element, "hidden");
-	var couchStore = new dojox.data.CouchDBRestStore({
-		target: fintracker.getExpensesUrl()});
+	function createStore() { return new dojox.data.CouchDBRestStore({
+		target: fintracker.getExpensesUrl()});}
+	var couchStore = createStore();
  	var grid = dojox.grid.DataGrid({store: couchStore,
 			query: "_design/logic/_view/byDate?",
 //			queryOptions: {cache: true},//TODO make sorting work
@@ -117,6 +122,7 @@ function RecentExpensesTable(element) {
 			},
 	element);
 	grid.startup();
+	dojo.topic.subscribe("addExpense", dojo._base.lang.hitch(grid, grid._refresh)); //TODO get rid of non-public _refresh method usage
 }
 
 })
