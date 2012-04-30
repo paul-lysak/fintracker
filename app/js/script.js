@@ -8,6 +8,7 @@ dojo.require("dojox.validate.web");
 dojo.require("dojox.data.ClientFilter");
 dojo.require("dojox.data.CouchDBRestStore");
 dojo.require("dojox.grid.EnhancedGrid");
+dojo.require("dojox.widget.Toaster");
 dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.NumberTextBox");
 dojo.ready(function() {
@@ -31,6 +32,10 @@ window.fintracker = fintracker = {
 }
 var dbInit = new DbInit(fintracker.settings);
 
+function displayInfo(msg) {
+	dojo.publish("toasterMessageTopic", {message: msg, type: "info", duration: 1000});
+}
+
 var expensesService = new function() {
 	//returns deferred with promise containing uuid string
 	function askUuid() {
@@ -53,7 +58,7 @@ var expensesService = new function() {
 			then(function(put_res) {
 						console.log("expense add success", put_res);
 						def.resolve(put_res);
-						dojo.topic.publish("addExpense", expense);
+						dojo.publish("addExpense", expense);
 						},
 					function(put_err) {
 						console.log("expense add fail", put_err);
@@ -77,6 +82,7 @@ dbInit.ensureDbExists().then(
 function initUI() {
 	var expEntry = new ExpensesEntryForm(dojo.byId("expensesEntry"));
 	var recentExpenses = new RecentExpensesTable(dojo.byId("recentExpenses"));
+	displayInfo("UI init complete");
 }
 
 function ExpensesEntryForm(element) {
@@ -98,7 +104,7 @@ function ExpensesEntryForm(element) {
 			var expense = dojo.formToObject("expensesEntry"); 
 			expensesService.addExpense(expense).then(function(res) {
 				form.setValues({amount: Number.NaN, category: "other", comment: ""}); //reset all fields except of date
-				console.log("exp callback", res);
+				displayInfo("Expense added");
 			});
 		});
 	console.log("form", catSelect, form);
@@ -123,7 +129,11 @@ function RecentExpensesTable(element) {
 			},
 	element);
 	grid.startup();
-	dojo.topic.subscribe("addExpense", dojo._base.lang.hitch(grid, grid._refresh)); //TODO get rid of non-public _refresh method usage
+	//TODO sometimes after refresh there may be few rows for new record
+	dojo.subscribe("addExpense", function(expense) {
+		console.log("refresh");
+		grid._refresh();
+	}); //TODO get rid of non-public _refresh method usage
 }
 
 })

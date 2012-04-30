@@ -4,6 +4,7 @@
   <link rel="stylesheet" href="js/lib/dojo-release-1.7.1/dijit/themes/claro/claro.css"/>
   <!-- link rel="stylesheet" href="js/lib/dojo-release-1.6.1/dojox/grid/resources/claroGrid.css"/-->
   <link rel="stylesheet" href="js/lib/dojo-release-1.7.1/dojox/grid/enhanced/resources/claro/EnhancedGrid.css"/>
+  <link rel="stylesheet" href="js/lib/dojo-release-1.7.1/dojox/widget/Toaster/Toaster.css"/>
   <link rel="stylesheet" type="text/css" href="css/style.css"/>
   <script src="js/lib/dojo-release-1.7.1/dojo/dojo.js.uncompressed.js" data-dojo-config="parseOnLoad: true"></script>
   <script src="js/dbInit.js"></script>
@@ -37,6 +38,11 @@ dojoType="dijit.form.TextBox"><br/>
 <div id="recentExpenses" class="expensesList hidden">
 </div>
 
+<div data-dojo-type="dojox.widget.Toaster"
+     data-dojo-props="positionDirection:'br-left', duration:0, messageTopic:'toasterMessageTopic'"
+     id="publish_subscribe_toaster"
+     >
+</div>
 </body>
 </html>
 
