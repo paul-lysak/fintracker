@@ -90,11 +90,11 @@ function ExpensesEntryForm(element) {
 	var form = dijit.byNode(element);
 	var controls = {
 		amount: dijit.getEnclosingWidget(dojo.query("[name=amount]", element)[0]),
-		date: dijit.getEnclosingWidget(dojo.query("[name=date]", element)[0]),
+		expDate: dijit.getEnclosingWidget(dojo.query("[name=expDate]", element)[0]),
 		category: dijit.byId("expenseCategory"),
 		comment: dijit.getEnclosingWidget(dojo.query("[name=comment]", element)[0])
 	}
-	
+	controls.expDate.set("value", new Date());
 	for(var optName in fintracker.categories) {
 		controls.category.addOption({value: optName, 
 			label: fintracker.categories[optName]});
