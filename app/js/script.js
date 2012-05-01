@@ -88,9 +88,15 @@ function ExpensesEntryForm(element) {
 	dojo.removeClass(element, "hidden");
 //	var form = dojo.query("form", element);
 	var form = dijit.byNode(element);
-	var catSelect = dijit.byId("expenseCategory");
+	var controls = {
+		amount: dijit.getEnclosingWidget(dojo.query("[name=amount]", element)[0]),
+		date: dijit.getEnclosingWidget(dojo.query("[name=date]", element)[0]),
+		category: dijit.byId("expenseCategory"),
+		comment: dijit.getEnclosingWidget(dojo.query("[name=comment]", element)[0])
+	}
+	
 	for(var optName in fintracker.categories) {
-		catSelect.addOption({value: optName, 
+		controls.category.addOption({value: optName, 
 			label: fintracker.categories[optName]});
 	}
 	dojo.query(".submit", element).connect("click", 
@@ -102,11 +108,13 @@ function ExpensesEntryForm(element) {
 			}
 			var expense = dojo.formToObject("expensesEntry"); 
 			expensesService.addExpense(expense).then(function(res) {
-				form.setValues({amount: Number.NaN, category: "other", comment: ""}); //reset all fields except of date
+				//reset all fields except of date
+				controls.amount.reset();
+				controls.category.reset();
+				controls.comment.reset();
 				displayInfo("Expense added");
 			});
 		});
-	console.log("form", catSelect, form);
 }
 
 function RecentExpensesTable(element) {
