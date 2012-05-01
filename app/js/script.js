@@ -82,7 +82,6 @@ dbInit.ensureDbExists().then(
 function initUI() {
 	var expEntry = new ExpensesEntryForm(dojo.byId("expensesEntry"));
 	var recentExpenses = new RecentExpensesTable(dojo.byId("recentExpenses"));
-	displayInfo("UI init complete");
 }
 
 function ExpensesEntryForm(element) {
@@ -112,9 +111,8 @@ function ExpensesEntryForm(element) {
 
 function RecentExpensesTable(element) {
 	dojo.removeClass(element, "hidden");
-	function createStore() { return new dojox.data.CouchDBRestStore({
-		target: fintracker.getExpensesUrl()});}
-	var couchStore = createStore();
+	var couchStore = new dojox.data.CouchDBRestStore({
+		target: fintracker.getExpensesUrl()});;
  	var grid = dojox.grid.DataGrid({store: couchStore,
 			query: "_design/logic/_view/byDate?",
 //			queryOptions: {cache: true},//TODO make sorting work
@@ -129,11 +127,9 @@ function RecentExpensesTable(element) {
 			},
 	element);
 	grid.startup();
-	//TODO sometimes after refresh there may be few rows for new record
 	dojo.subscribe("addExpense", function(expense) {
-		console.log("refresh");
-		grid._refresh();
-	}); //TODO get rid of non-public _refresh method usage
+		grid.setQuery(grid.query); //this seems to be only way to refresh grid without private methods
+	});
 }
 
 })

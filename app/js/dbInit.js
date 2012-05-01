@@ -31,7 +31,8 @@ function ensureStorageExists(storageName) {
 		error: function(error, ioargs) {
 			if(ioargs.xhr.status == 404) {
 				createStorage(storageName).then(//TODO i beleive it can be simplified
-					function(succ) {def.resolve(succ)},
+					function(succ) {def.resolve(succ);
+						dojo.publish("toasterMessageTopic", {message: "Storage created:"+storageName, type: "info", duration: 1000});},
 					function(err) {def.reject(err)});
 			} else {
 				def.reject(error);
