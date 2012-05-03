@@ -1,6 +1,7 @@
 dojo.require("dojo._base.lang");
 dojo.require("dojo.fx");
 dojo.require("dojo.topic");
+dojo.require("dojo.behavior");
 dojo.require("dijit.Menu");
 dojo.require("dijit.form.Form");
 dojo.require("dijit.form.Select");
@@ -141,6 +142,21 @@ function RecentExpensesTable(element) {
 	dojo.subscribe("addExpense", function(expense) {
 		grid.setQuery(grid.query); //this seems to be only way to refresh grid without private methods
 	});
+	
+	dojo.behavior.add(
+		{"#expenseItemMenu .edit": {
+			onclick: function() {
+				var selItem = grid.selection.getSelected()[0];
+				console.log("edit item: ", selItem);
+		}},
+		"#expenseItemMenu .delete": {
+			onclick: function() {
+				var selItems = grid.selection.getSelected();
+				console.log("delete items:", selItems);
+		}}
+	});
+	dojo.behavior.apply();
+	
 	var menuItemEdit = dijit.getEnclosingWidget(dojo.query("#expenseItemMenu .edit")[0]);
 	var menuItemDelete = dijit.getEnclosingWidget(dojo.query("#expenseItemMenu .delete")[0]);
 	grid.on("rowContextMenu", function(event, a) {
@@ -153,8 +169,7 @@ function RecentExpensesTable(element) {
 		} else {
 			menuItemEdit.attr("disabled", false);
 		}
-		console.log("rowContext", selItems);
-		});
+	});
 }
 
 })
