@@ -134,13 +134,27 @@ function RecentExpensesTable(element) {
 			{name: "Category", field: "category"},
 			{name: "Comment", field: "comment"},
 			],
-			plugins: {menus: {rowMenu: "expenseItemMenu", selectedRegionMenu: "expenseSelectionMenu"}}
+			plugins: {menus: {rowMenu: "expenseItemMenu"}}
 			},
 	element);
 	grid.startup();
 	dojo.subscribe("addExpense", function(expense) {
 		grid.setQuery(grid.query); //this seems to be only way to refresh grid without private methods
 	});
+	var menuItemEdit = dijit.getEnclosingWidget(dojo.query("#expenseItemMenu .edit")[0]);
+	var menuItemDelete = dijit.getEnclosingWidget(dojo.query("#expenseItemMenu .delete")[0]);
+	grid.on("rowContextMenu", function(event, a) {
+		if(!grid.selection.selected[event.rowIndex]) {
+			grid.selection.clickSelect(event.rowIndex, false, false); //select only clicked item if clicked outside of selection
+		}
+		var selItems = grid.selection.getSelected();
+		if(selItems.length > 1) {
+			menuItemEdit.attr("disabled", true);
+		} else {
+			menuItemEdit.attr("disabled", false);
+		}
+		console.log("rowContext", selItems);
+		});
 }
 
 })
