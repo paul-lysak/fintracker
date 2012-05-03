@@ -37,11 +37,23 @@ dojoType="dijit.form.TextBox"><br/>
 <div id="recentExpenses" class="expensesList hidden">
 </div>
 
+<div id="forMenu" >click here to get a menu</div>
+
 <div data-dojo-type="dojox.widget.Toaster"
      data-dojo-props="positionDirection:'br-left', duration:0, messageTopic:'toasterMessageTopic'"
      id="publish_subscribe_toaster"
      >
 </div>
+
+<div data-dojo-type="dijit.Menu" id="expenseItemMenu" data-dojo-props="" style="display: none;">
+    <div data-dojo-type="dijit.MenuItem" data-dojo-props="onClick:function(){alert('edit')}">Edit</div>
+    <div data-dojo-type="dijit.MenuItem" data-dojo-props="onClick:function(){alert('del')}">Delete</div>
+</div>
+
+<div data-dojo-type="dijit.Menu" id="expenseSelectionMenu" data-dojo-props="" style="display: none;">
+    <div data-dojo-type="dijit.MenuItem" data-dojo-props="onClick:function(){alert('del')}">Delete</div>
+</div>
+
 </body>
 </html>
 

@@ -1,6 +1,7 @@
 dojo.require("dojo._base.lang");
 dojo.require("dojo.fx");
 dojo.require("dojo.topic");
+dojo.require("dijit.Menu");
 dojo.require("dijit.form.Form");
 dojo.require("dijit.form.Select");
 dojo.require("dojox.validate");
@@ -8,6 +9,7 @@ dojo.require("dojox.validate.web");
 dojo.require("dojox.data.ClientFilter");
 dojo.require("dojox.data.CouchDBRestStore");
 dojo.require("dojox.grid.EnhancedGrid");
+dojo.require("dojox.grid.enhanced.plugins.Menu");
 dojo.require("dojox.widget.Toaster");
 dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.NumberTextBox");
@@ -121,7 +123,7 @@ function RecentExpensesTable(element) {
 	dojo.removeClass(element, "hidden");
 	var couchStore = new dojox.data.CouchDBRestStore({
 		target: fintracker.getExpensesUrl()});;
- 	var grid = dojox.grid.DataGrid({store: couchStore,
+ 	var grid = dojox.grid.EnhancedGrid({store: couchStore,
 			query: "_design/logic/_view/byDate?",
 //			queryOptions: {cache: true},//TODO make sorting work
 			canSort: function() {return false},
@@ -131,7 +133,8 @@ function RecentExpensesTable(element) {
 			{name: "Date", field: "expDate"},
 			{name: "Category", field: "category"},
 			{name: "Comment", field: "comment"},
-			]
+			],
+			plugins: {menus: {rowMenu: "expenseItemMenu", selectedRegionMenu: "expenseSelectionMenu"}}
 			},
 	element);
 	grid.startup();
