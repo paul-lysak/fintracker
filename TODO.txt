@@ -1,4 +1,3 @@
-- Ability to bulk remove expenses
 - Ability to update expenses
 - Unit tests
 

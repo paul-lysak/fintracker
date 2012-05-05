@@ -79,8 +79,11 @@ var expensesService = new function() {
 			var item = expenses[0];
 			def = expensesStore.delete(item._id+"?rev="+item._rev);	
 		} else {
-			alert("bulk removal not supported yet");
-			return null;
+			var bulkBody = {docs: []};
+			expenses.forEach(function(item) {
+				bulkBody.docs.push({_id: item._id, _rev: item._rev, _deleted: true});
+			});
+			def = expensesStore.post("_bulk_docs", dojo.toJson(bulkBody));
 		}
 		return def.then(function() {
 			dojo.publish("removeExpenses", expenses);
@@ -144,7 +147,7 @@ function shortExpenseInfo(expenseItems, maxItems, maxDescr) {
 	var remains = expenseItems.length - n;
 	for(var i = 0; i<n; i++) {
 		var descr = expenseItems[i].comment;
-		if(descr.length > maxDescr) {
+		if(descr != null && descr.length > maxDescr) {
 			descr = descr.substring(0, maxDescr-3)+"...";
 		}
 		res[i] = expenseItems[i].amount + " " + expenseItems[i].expDate+" "+descr;
