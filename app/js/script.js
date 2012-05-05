@@ -72,6 +72,20 @@ var expensesService = new function() {
 		});
 		return def;
 	}
+
+	this.removeExpenses = function(expenses) {
+		var def;
+		if(expenses.length == 1) {
+			var item = expenses[0];
+			def = expensesStore.delete(item._id+"?rev="+item._rev);	
+		} else {
+			alert("bulk removal not supported yet");
+			return null;
+		}
+		return def.then(function() {
+			dojo.publish("removeExpenses", expenses);
+		});
+	}
 };
 
 dbInit.ensureDbExists().then(
@@ -160,9 +174,11 @@ function RecentExpensesTable(element) {
 			},
 	element);
 	grid.startup();
-	dojo.subscribe("addExpense", function(expense) {
+	function refreshGrid(expense) {
 		grid.setQuery(grid.query); //this seems to be only way to refresh grid without private methods
-	});
+	}
+	dojo.subscribe("addExpense", refreshGrid);
+	dojo.subscribe("removeExpenses", refreshGrid);
 	
 	dojo.behavior.add(
 		{"#expenseItemMenu .edit": {
@@ -173,9 +189,10 @@ function RecentExpensesTable(element) {
 		"#expenseItemMenu .delete": {
 			onclick: function() {
 				var selItems = grid.selection.getSelected();
-				confirm("Do you really want to remove following expenses?\n" +
-					shortExpenseInfo(selItems).join("\n"));
-				console.log("delete items:", selItems);
+				if(confirm("Do you really want to remove following expenses?\n" +
+					shortExpenseInfo(selItems).join("\n"))) {
+					expensesService.removeExpenses(selItems);
+				}
 		}}
 	});
 	dojo.behavior.apply();
