@@ -120,6 +120,27 @@ function ExpensesEntryForm(element) {
 		});
 }
 
+function shortExpenseInfo(expenseItems, maxItems, maxDescr) {
+	if(maxItems === undefined)
+		maxItems = 5;
+	if(maxDescr === undefined)
+		maxDescr = 32;
+	var res = [];	
+	var n = Math.min(maxItems, expenseItems.length);
+	var remains = expenseItems.length - n;
+	for(var i = 0; i<n; i++) {
+		var descr = expenseItems[i].comment;
+		if(descr.length > maxDescr) {
+			descr = descr.substring(0, maxDescr-3)+"...";
+		}
+		res[i] = expenseItems[i].amount + " " + expenseItems[i].expDate+" "+descr;
+	}
+	if(remains > 0 ) {
+		res.push("and "+remains+" items more");
+	}
+	return res;
+}
+
 function RecentExpensesTable(element) {
 	dojo.removeClass(element, "hidden");
 	var couchStore = new dojox.data.CouchDBRestStore({
@@ -152,6 +173,8 @@ function RecentExpensesTable(element) {
 		"#expenseItemMenu .delete": {
 			onclick: function() {
 				var selItems = grid.selection.getSelected();
+				confirm("Do you really want to remove following expenses?\n" +
+					shortExpenseInfo(selItems).join("\n"));
 				console.log("delete items:", selItems);
 		}}
 	});
