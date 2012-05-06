@@ -26,7 +26,7 @@ required="true"><br/>
 Date:<input type="text" name="expDate" id="expenseDate"
 dojoType="dijit.form.DateTextBox"
 required="true"/><br/>
-Category:<select class="category" id="expenseCategory" 
+Category:<select class="category" id="expenseCategory" name="category" 
 	data-dojo-type="dijit.form.Select" data-dojo-props="name: 'category'"></select><br/>
 Comment:<input type="text" name="comment" style="width: 40em" 
 dojoType="dijit.form.TextBox"><br/>
@@ -37,7 +37,13 @@ dojoType="dijit.form.TextBox"><br/>
 <div id="recentExpenses" class="expensesList hidden">
 </div>
 
-<div id="forMenu" >click here to get a menu</div>
+<div data-dojo-type="dijit.Dialog" id="editExpenseDialog" title="Edit Expense" style="display: none">
+	TODO: insert a form here<br/><br/>
+	<button data-dojo-type="dijit.form.Button" type="submit"
+		data-dojo-props="onClick:function(){return dijit.byId('editExpenseDialog').isValid();}">OK</button>
+	<button data-dojo-type="dijit.form.Button" type="button"
+		data-dojo-props="onClick:function(){dijit.byId('editExpenseDialog').hide();}">Cancel</button>
+</div>
 
 <div data-dojo-type="dojox.widget.Toaster"
      data-dojo-props="positionDirection:'br-left', duration:0, messageTopic:'toasterMessageTopic'"

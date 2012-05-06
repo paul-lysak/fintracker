@@ -1,3 +1,6 @@
 - Ability to update expenses
+	- make category selection control reusable
+	- make expense entry form reusable (maybe, custom widget)
+	- place that form into expense edit dialog
 - Unit tests
 

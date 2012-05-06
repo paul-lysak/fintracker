@@ -2,6 +2,7 @@ dojo.require("dojo._base.lang");
 dojo.require("dojo.fx");
 dojo.require("dojo.topic");
 dojo.require("dojo.behavior");
+dojo.require("dijit.Dialog");
 dojo.require("dijit.Menu");
 dojo.require("dijit.form.Form");
 dojo.require("dijit.form.Select");
@@ -111,7 +112,7 @@ function ExpensesEntryForm(element) {
 	var controls = {
 		amount: dijit.getEnclosingWidget(dojo.query("[name=amount]", element)[0]),
 		expDate: dijit.getEnclosingWidget(dojo.query("[name=expDate]", element)[0]),
-		category: dijit.byId("expenseCategory"),
+		category: dijit.getEnclosingWidget(dojo.query("[name=category]", element)[0]),
 		comment: dijit.getEnclosingWidget(dojo.query("[name=comment]", element)[0])
 	}
 	controls.expDate.set("value", new Date());
@@ -182,13 +183,16 @@ function RecentExpensesTable(element) {
 	}
 	dojo.subscribe("addExpense", refreshGrid);
 	dojo.subscribe("removeExpenses", refreshGrid);
-	
+
+	function editSelectedExpense() {
+		var selItem = grid.selection.getSelected()[0];
+		//TODO load selected item data into dialog
+		dijit.byId("editExpenseDialog").show();	
+	}
 	dojo.behavior.add(
 		{"#expenseItemMenu .edit": {
-			onclick: function() {
-				var selItem = grid.selection.getSelected()[0];
-				console.log("edit item: ", selItem);
-		}},
+			onclick: editSelectedExpense 
+		},
 		"#expenseItemMenu .delete": {
 			onclick: function() {
 				var selItems = grid.selection.getSelected();
@@ -200,6 +204,7 @@ function RecentExpensesTable(element) {
 	});
 	dojo.behavior.apply();
 	
+	grid.on("rowDblClick", editSelectedExpense); 
 	var menuItemEdit = dijit.getEnclosingWidget(dojo.query("#expenseItemMenu .edit")[0]);
 	var menuItemDelete = dijit.getEnclosingWidget(dojo.query("#expenseItemMenu .delete")[0]);
 	grid.on("rowContextMenu", function(event, a) {
