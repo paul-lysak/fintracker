@@ -15,6 +15,7 @@ dojo.require("dojox.grid.enhanced.plugins.Menu");
 dojo.require("dojox.widget.Toaster");
 dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.NumberTextBox");
+dojo.require("fintracker.ExpenseForm");
 dojo.ready(function() {
 window.fintracker = fintracker = {
 	settings: {

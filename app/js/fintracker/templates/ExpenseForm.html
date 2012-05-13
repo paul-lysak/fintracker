@@ -1,0 +1,19 @@
+<div data-dojo-attach-point="expensesEntry" class="expenses" dojoType="dijit.form.Form">
+<!-- form id="expensesEntryForm" -->
+Enter expenses:<br/>
+Amount:<input type="text" name="amount" class="amount" data-dojo-attach-point="amount"
+size="10"
+dojoType="dijit.form.NumberTextBox"
+constraints="{min:0, max: 200000, pattern:'#####0.##'}"
+invalidMessage="Should be number"
+required="true"><br/>
+Date:<input type="text" name="expDate" data-dojo-attach-point="expDate"
+dojoType="dijit.form.DateTextBox"
+required="true"/><br/>
+Category:<select class="category" name="category" data-dojo-attach-point="category" 
+	data-dojo-type="dijit.form.Select" data-dojo-props="name: 'category'"></select><br/>
+Comment:<input type="text" name="comment" style="width: 40em" data-dojo-attach-point="comment" 
+dojoType="dijit.form.TextBox"><br/>
+<!-- /form -->
+</div>
+

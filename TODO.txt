@@ -1,6 +1,9 @@
 - Ability to update expenses
-	- make category selection control reusable
-	- make expense entry form reusable (maybe, custom widget)
-	- place that form into expense edit dialog
+	- fill category options in widget
+	- set widget form value on dialog open
+	- validate form on OK
+	- send updates
+	- show update confirmation
+	- use same widget when creating items
 - Unit tests
 
