@@ -12,8 +12,8 @@
 				isDebug: true ,
 				uncompressed: true,
 				packages: [{
-					name: "fintracker",
-					location: "/js/fintracker" //TODO make it work with any context path, not just with root application
+					name: "components",
+					location: "/js/components" //TODO make it work with any context path, not just with root application
 				}]
 			};
 	</script>
@@ -49,8 +49,7 @@ dojoType="dijit.form.TextBox"><br/>
 </div>
 
 <div data-dojo-type="dijit.Dialog" id="editExpenseDialog" title="Edit Expense" style="display: none">
-	<div data-dojo-type="fintracker.ExpenseForm">expForm here</div>
-	TODO: insert a form here<br/><br/>
+	<div class="editExpenseForm" data-dojo-type="components.ExpenseForm">expForm here</div>
 	<button data-dojo-type="dijit.form.Button" type="submit"
 		data-dojo-props="onClick:function(){return dijit.byId('editExpenseDialog').isValid();}">OK</button>
 	<button data-dojo-type="dijit.form.Button" type="button"

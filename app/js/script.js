@@ -15,7 +15,7 @@ dojo.require("dojox.grid.enhanced.plugins.Menu");
 dojo.require("dojox.widget.Toaster");
 dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.NumberTextBox");
-dojo.require("fintracker.ExpenseForm");
+dojo.require("components.ExpenseForm");
 dojo.ready(function() {
 window.fintracker = fintracker = {
 	settings: {
@@ -105,6 +105,7 @@ function initUI() {
 	var expEntry = new ExpensesEntryForm(dojo.byId("expensesEntry"));
 	var recentExpenses = new RecentExpensesTable(dojo.byId("recentExpenses"));
 }
+var expenseEditDialog = new ExpenseEditDialog(dijit.byId("editExpenseDialog"));
 
 function ExpensesEntryForm(element) {
 	dojo.removeClass(element, "hidden");
@@ -137,6 +138,16 @@ function ExpensesEntryForm(element) {
 				displayInfo("Expense added");
 			});
 		});
+}
+
+function ExpenseEditDialog(dialogDijit) {
+	var expenseForm = dijit.getEnclosingWidget(dojo.query("div.editExpenseForm", dialogDijit.domNode)[0]);
+	expenseForm.set("categoriesMap", fintracker.categories);
+
+	this.edit = function(expense) {
+	//TODO load expense item into UI controls
+		dialogDijit.show();
+	}
 }
 
 function shortExpenseInfo(expenseItems, maxItems, maxDescr) {
@@ -187,9 +198,9 @@ function RecentExpensesTable(element) {
 
 	function editSelectedExpense() {
 		var selItem = grid.selection.getSelected()[0];
-		//TODO load selected item data into dialog
-		dijit.byId("editExpenseDialog").show();	
+		expenseEditDialog.edit(selItem);
 	}
+
 	dojo.behavior.add(
 		{"#expenseItemMenu .edit": {
 			onclick: editSelectedExpense 
