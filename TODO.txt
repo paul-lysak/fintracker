@@ -1,6 +1,4 @@
 - Ability to update expenses
-	- fill category options in widget
-	- set widget form value on dialog open
 	- validate form on OK
 	- send updates
 	- show update confirmation

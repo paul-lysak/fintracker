@@ -141,10 +141,12 @@ function ExpensesEntryForm(element) {
 }
 
 function ExpenseEditDialog(dialogDijit) {
-	var expenseForm = dijit.getEnclosingWidget(dojo.query("div.editExpenseForm", dialogDijit.domNode)[0]);
+	var expenseForm = dijit.getEnclosingWidget(dojo.query("form.editExpenseForm", dialogDijit.domNode)[0]);
 	expenseForm.set("categoriesMap", fintracker.categories);
 
 	this.edit = function(expense) {
+		var curVal = expenseForm.get("value");
+		expenseForm.set("value", expense);
 	//TODO load expense item into UI controls
 		dialogDijit.show();
 	}
