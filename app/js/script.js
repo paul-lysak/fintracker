@@ -140,14 +140,21 @@ function ExpensesEntryForm(element) {
 		});
 }
 
+function getSubWidget(widget, query) {
+	var subWidget = dijit.getEnclosingWidget(dojo.query(query, widget.domNode)[0]);
+	return subWidget;
+}
+
 function ExpenseEditDialog(dialogDijit) {
-	var expenseForm = dijit.getEnclosingWidget(dojo.query("form.editExpenseForm", dialogDijit.domNode)[0]);
+	var expenseForm = getSubWidget(dialogDijit, "form.expenseForm");
 	expenseForm.set("categoriesMap", fintracker.categories);
+	var okButton = getSubWidget(dialogDijit, "[name='ok']");
+	var cancelButton = getSubWidget(dialogDijit, "[name='cancel']");
+	//TODO use these buttons
 
 	this.edit = function(expense) {
 		var curVal = expenseForm.get("value");
 		expenseForm.set("value", expense);
-	//TODO load expense item into UI controls
 		dialogDijit.show();
 	}
 }
