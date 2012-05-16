@@ -91,6 +91,10 @@ var expensesService = new function() {
 			dojo.publish("removeExpenses", expenses);
 		});
 	}
+
+	this.updateExpense = function(expense) {
+		console.log("updateExpense", expense);
+	}
 };
 
 dbInit.ensureDbExists().then(
@@ -124,7 +128,6 @@ function ExpensesEntryForm(element) {
 	}
 	dojo.query(".submit", element).connect("click", 
 		function(){
-//			var expense = dojo.formToObject(form); 
 			if(!form.validate()) {
 				alert("Please enter valid data");
 				return;
@@ -150,6 +153,20 @@ function ExpenseEditDialog(dialogDijit) {
 	expenseForm.set("categoriesMap", fintracker.categories);
 	var okButton = getSubWidget(dialogDijit, "[name='ok']");
 	var cancelButton = getSubWidget(dialogDijit, "[name='cancel']");
+	okButton.on("click", function() {
+		if(!expenseForm.isValid()) {
+				alert("Please enter valid data");
+				return;
+			}
+		var updatedExpense = expenseForm.get("value"); 
+		//TODO build correct updatedExpense object
+		expensesService.updateExpense(updatedExpense);
+		dialogDijit.hide();
+		});
+	cancelButton.on("click", function() {
+		dialogDijit.reset();
+		dialogDijit.hide();
+		});
 	//TODO use these buttons
 
 	this.edit = function(expense) {

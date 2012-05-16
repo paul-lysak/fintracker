@@ -50,10 +50,8 @@ dojoType="dijit.form.TextBox"><br/>
 
 <div data-dojo-type="dijit.Dialog" id="editExpenseDialog" title="Edit Expense" style="display: none">
 	<div class="editExpenseForm" data-dojo-type="components.ExpenseForm" data-dojo-attach-point="expenseForm"></div>
-	<button data-dojo-type="dijit.form.Button" type="submit" name="ok"
-		data-dojo-props="onClick:function(){return dijit.byId('editExpenseDialog').isValid();}">OK</button>
-	<button data-dojo-type="dijit.form.Button" type="button" name="cancel" 
-		data-dojo-props="onClick:function(){dijit.byId('editExpenseDialog').hide();}">Cancel</button>
+	<button data-dojo-type="dijit.form.Button" type="button" name="ok">OK</button>
+	<button data-dojo-type="dijit.form.Button" type="button" name="cancel">Cancel</button>
 </div>
 
 <div data-dojo-type="dojox.widget.Toaster"
