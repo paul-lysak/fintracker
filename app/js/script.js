@@ -158,8 +158,9 @@ function ExpenseEditDialog(dialogDijit) {
 				alert("Please enter valid data");
 				return;
 			}
-		var updatedExpense = expenseForm.get("value"); 
-		//TODO build correct updatedExpense object
+		var updatedExpense = expenseForm.get("expense"); 
+		//TODO format date
+		//TODO add _id and _rev
 		expensesService.updateExpense(updatedExpense);
 		dialogDijit.hide();
 		});
@@ -167,11 +168,11 @@ function ExpenseEditDialog(dialogDijit) {
 		dialogDijit.reset();
 		dialogDijit.hide();
 		});
-	//TODO use these buttons
 
 	this.edit = function(expense) {
-		var curVal = expenseForm.get("value");
-		expenseForm.set("value", expense);
+		console.log("edit open", expense);
+		expenseForm.set("expense", expense);
+		expenseForm.set("somestuff", expense);
 		dialogDijit.show();
 	}
 }

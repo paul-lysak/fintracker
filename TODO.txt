@@ -1,5 +1,5 @@
 - Ability to update expenses
-	- build updated expense object
+	- format date in expense object
 	- send updates
 	- show update confirmation
 	- use same widget when creating items
