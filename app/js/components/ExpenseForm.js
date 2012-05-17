@@ -1,7 +1,7 @@
 define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", 
-    "dojo/text!./templates/ExpenseForm.html", "dijit/form/_FormMixin" ],
-    function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, formTemplate, FormMixin){
-        return declare("components.ExpenseForm", [WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, FormMixin ], {
+    "dojo/text!./templates/ExpenseForm.html", "dijit/form/_FormMixin", "dojo/_base/lang", "dojo/date/stamp" ],
+    function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, formTemplate, FormMixin, lang, stamp){
+        return declare("components.ExpenseForm", [WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, FormMixin], {
 			templateString: formTemplate,
 			
 			_originalExpense: null,
@@ -9,7 +9,7 @@ define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin", "diji
 			_setCategoriesMapAttr: function(categoriesMap) {
 				this.categoriesMap = categoriesMap;
 
-				//TODO clear categories before adding options 
+				//TODO clear categories before adding options. There's no ready-made dojo api for this 
 				for(var optName in categoriesMap) {
 					this.category.addOption({value: optName, 
 						label: categoriesMap[optName]});
@@ -27,10 +27,10 @@ define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin", "diji
 			},
 
 			_getExpenseAttr: function() {
-				var expense = this.get("value");
-				expense._id = this._originalExpense._id;
-				expense._rev = this._originalExpense._rev;
-		//TODO format date
+				var expense = {_id: this._originalExpense._id, 
+						_rev: this._originalExpense._rev}
+				lang.mixin(expense, this.get("value"));
+				expense.expDate = stamp.toISOString(expense.expDate, {selector: "date"});
 				return expense;
 			},
 

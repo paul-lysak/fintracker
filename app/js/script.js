@@ -159,8 +159,6 @@ function ExpenseEditDialog(dialogDijit) {
 				return;
 			}
 		var updatedExpense = expenseForm.get("expense"); 
-		//TODO format date
-		//TODO add _id and _rev
 		expensesService.updateExpense(updatedExpense);
 		dialogDijit.hide();
 		});
