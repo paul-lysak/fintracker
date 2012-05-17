@@ -94,6 +94,10 @@ var expensesService = new function() {
 
 	this.updateExpense = function(expense) {
 		console.log("updateExpense", expense);
+		return expensesStore.put(expense._id, dojo.toJson(expense)).then(
+			function() {
+				dojo.publish("updateExpense", expense);
+			});
 	}
 };
 
@@ -160,7 +164,10 @@ function ExpenseEditDialog(dialogDijit) {
 				return;
 			}
 		var updatedExpense = expenseForm.get("expense"); 
-		expensesService.updateExpense(updatedExpense);
+		expensesService.updateExpense(updatedExpense).then(
+			function() {
+				displayInfo("Expense updated");
+			});
 		dialogDijit.hide();
 		});
 	cancelButton.on("click", function() {
@@ -219,6 +226,7 @@ function RecentExpensesTable(element) {
 		grid.setQuery(grid.query); //this seems to be only way to refresh grid without private methods
 	}
 	dojo.subscribe("addExpense", refreshGrid);
+	dojo.subscribe("updateExpense", refreshGrid);
 	dojo.subscribe("removeExpenses", refreshGrid);
 
 	/**

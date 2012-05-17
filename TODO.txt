@@ -1,6 +1,4 @@
 - Ability to update expenses
-	- send updates
-	- show update confirmation
 	- show error confirmation
 	- use same widget when creating items
 - Unit tests
