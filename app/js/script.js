@@ -112,6 +112,7 @@ function initUI() {
 var expenseEditDialog = new ExpenseEditDialog(dijit.byId("editExpenseDialog"));
 
 function ExpensesEntryForm(element) {
+//TODO use ExpenseForm widget here
 	dojo.removeClass(element, "hidden");
 //	var form = dojo.query("form", element);
 	var form = dijit.byNode(element);
@@ -168,7 +169,6 @@ function ExpenseEditDialog(dialogDijit) {
 		});
 
 	this.edit = function(expense) {
-		console.log("edit open", expense);
 		expenseForm.set("expense", expense);
 		expenseForm.set("somestuff", expense);
 		dialogDijit.show();
@@ -221,9 +221,26 @@ function RecentExpensesTable(element) {
 	dojo.subscribe("addExpense", refreshGrid);
 	dojo.subscribe("removeExpenses", refreshGrid);
 
+	/**
+	* Strip down some garbage after JsonRestStore
+	*/	
+	function getPlainObject(heavyObject) {
+		var plainObject = {};
+		dojo.mixin(plainObject, heavyObject);
+		delete plainObject.__id;
+		delete plainObject.__parent;
+		delete plainObject._loadObject;
+		for(var k in plainObject) {
+			if(dojo.isObject(plainObject[k])) {
+				plainObject[k] = dojo.clone(plainObject[k]);
+			}
+		}
+		return plainObject;
+	}
+
 	function editSelectedExpense() {
 		var selItem = grid.selection.getSelected()[0];
-		expenseEditDialog.edit(selItem);
+		expenseEditDialog.edit(getPlainObject(selItem));
 	}
 
 	dojo.behavior.add(

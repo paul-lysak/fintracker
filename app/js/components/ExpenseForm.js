@@ -16,19 +16,13 @@ define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin", "diji
 				}
 			},
 
-			_setSomestuffAttr: function(expense) {
-				console.log("somestuff setter called", expense);	
-			},
-	
 			_setExpenseAttr: function(expense) {
-				console.log("setter called", expense);	
 				this._originalExpense = expense; 
 				this.set("value", expense);
 			},
 
 			_getExpenseAttr: function() {
-				var expense = {_id: this._originalExpense._id, 
-						_rev: this._originalExpense._rev}
+				var expense = lang.clone(this._originalExpense);
 				lang.mixin(expense, this.get("value"));
 				expense.expDate = stamp.toISOString(expense.expDate, {selector: "date"});
 				return expense;
