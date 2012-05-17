@@ -41,6 +41,12 @@ function displayInfo(msg) {
 	dojo.publish("toasterMessageTopic", {message: msg, type: "info", duration: 1000});
 }
 
+function displayError(msg) {
+	dojo.publish("toasterMessageTopic", {message: msg, type: "error", duration: 3000});
+}
+
+
+
 var expensesService = new function() {
 	//returns deferred with promise containing uuid string
 	function askUuid() {
@@ -58,15 +64,12 @@ var expensesService = new function() {
 		console.log("add expense", expense);
 		var def = new dojo.Deferred();
 		askUuid().then(function(uuid) {
-				console.log("got uuid", uuid)
 				var p = expensesStore.put(uuid, dojo.toJson(expense)).
 			then(function(put_res) {
-						console.log("expense add success", put_res);
 						def.resolve(put_res);
 						dojo.publish("addExpense", expense);
 						},
 					function(put_err) {
-						console.log("expense add fail", put_err);
 						def.reject(put_err);}
 				);
 		}, function(uuid_err) {
@@ -144,7 +147,7 @@ function ExpensesEntryForm(element) {
 				controls.category.reset();
 				controls.comment.reset();
 				displayInfo("Expense added");
-			});
+			}, function() {displayError("Failed to add expense.");});
 		});
 }
 
@@ -165,9 +168,8 @@ function ExpenseEditDialog(dialogDijit) {
 			}
 		var updatedExpense = expenseForm.get("expense"); 
 		expensesService.updateExpense(updatedExpense).then(
-			function() {
-				displayInfo("Expense updated");
-			});
+			function() {displayInfo("Expense updated");}, 
+			function() {displayError("Failed to update expense.");});
 		dialogDijit.hide();
 		});
 	cancelButton.on("click", function() {

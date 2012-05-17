@@ -1,5 +1,4 @@
 - Ability to update expenses
-	- show error confirmation
 	- use same widget when creating items
 - Unit tests
 
