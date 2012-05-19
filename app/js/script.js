@@ -1,20 +1,13 @@
 dojo.require("dojo._base.lang");
-dojo.require("dojo.fx");
 dojo.require("dojo.topic");
 dojo.require("dojo.behavior");
 dojo.require("dijit.Dialog");
 dojo.require("dijit.Menu");
-dojo.require("dijit.form.Form");
-dojo.require("dijit.form.Select");
-dojo.require("dojox.validate");
-dojo.require("dojox.validate.web");
 dojo.require("dojox.data.ClientFilter");
 dojo.require("dojox.data.CouchDBRestStore");
 dojo.require("dojox.grid.EnhancedGrid");
 dojo.require("dojox.grid.enhanced.plugins.Menu");
 dojo.require("dojox.widget.Toaster");
-dojo.require("dijit.form.DateTextBox");
-dojo.require("dijit.form.NumberTextBox");
 dojo.require("components.ExpenseForm");
 dojo.ready(function() {
 window.fintracker = fintracker = {
@@ -113,46 +106,39 @@ dbInit.ensureDbExists().then(
 	});
 
 function initUI() {
-	var expEntry = new ExpensesEntryForm(dojo.byId("expensesEntry"));
+	var expEntry = new ExpensesEntryArea(dojo.byId("createExpenseArea"));
 	var recentExpenses = new RecentExpensesTable(dojo.byId("recentExpenses"));
 }
 var expenseEditDialog = new ExpenseEditDialog(dijit.byId("editExpenseDialog"));
 
-function ExpensesEntryForm(element) {
-//TODO use ExpenseForm widget here
+function ExpensesEntryArea(element) {
 	dojo.removeClass(element, "hidden");
-//	var form = dojo.query("form", element);
-	var form = dijit.byNode(element);
-	var controls = {
-		amount: dijit.getEnclosingWidget(dojo.query("[name=amount]", element)[0]),
-		expDate: dijit.getEnclosingWidget(dojo.query("[name=expDate]", element)[0]),
-		category: dijit.getEnclosingWidget(dojo.query("[name=category]", element)[0]),
-		comment: dijit.getEnclosingWidget(dojo.query("[name=comment]", element)[0])
-	}
-	controls.expDate.set("value", new Date());
-	for(var optName in fintracker.categories) {
-		controls.category.addOption({value: optName, 
-			label: fintracker.categories[optName]});
-	}
-	dojo.query(".submit", element).connect("click", 
+	var form = getSubWidget(element, ".createExpenseForm");
+	form.set("categoriesMap", fintracker.categories);
+	form.expDate.set("value", new Date());
+	dojo.query("[name=ok]", element).connect("click", 
 		function(){
 			if(!form.validate()) {
-				alert("Please enter valid data");
+				displayError("Please enter valid data");
 				return;
 			}
-			var expense = dojo.formToObject("expensesEntry"); 
+			var expense = form.get("expense"); 
 			expensesService.addExpense(expense).then(function(res) {
 				//reset all fields except of date
-				controls.amount.reset();
-				controls.category.reset();
-				controls.comment.reset();
+				form.amount.reset();
+				form.category.reset();
+				form.comment.reset();
 				displayInfo("Expense added");
 			}, function() {displayError("Failed to add expense.");});
 		});
 }
 
-function getSubWidget(widget, query) {
-	var subWidget = dijit.getEnclosingWidget(dojo.query(query, widget.domNode)[0]);
+function getSubWidget(widgetOrNode, query) {
+	var node = widgetOrNode.domNode;
+	if(node == undefined) {
+		node = widgetOrNode;
+	}
+	var subWidget = dijit.getEnclosingWidget(dojo.query(query, node)[0]);
 	return subWidget;
 }
 
@@ -163,7 +149,7 @@ function ExpenseEditDialog(dialogDijit) {
 	var cancelButton = getSubWidget(dialogDijit, "[name='cancel']");
 	okButton.on("click", function() {
 		if(!expenseForm.isValid()) {
-				alert("Please enter valid data");
+				displayError("Please enter valid data");
 				return;
 			}
 		var updatedExpense = expenseForm.get("expense"); 
@@ -276,11 +262,8 @@ function RecentExpensesTable(element) {
 			grid.selection.clickSelect(event.rowIndex, false, false); //select only clicked item if clicked outside of selection
 		}
 		var selItems = grid.selection.getSelected();
-		if(selItems.length > 1) {
-			menuItemEdit.attr("disabled", true);
-		} else {
-			menuItemEdit.attr("disabled", false);
-		}
+		var canEdit = (selItems.length > 1);
+		menuItemEdit.set("disabled", !canEdit);
 	});
 }
 

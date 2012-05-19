@@ -1,4 +1,5 @@
-- Ability to update expenses
-	- use same widget when creating items
+- Refactor:
+	- create module for dbInit
+	- generalize expense store service and move it to separate module
 - Unit tests
 

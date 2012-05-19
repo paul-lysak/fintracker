@@ -1,5 +1,6 @@
 define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", 
-    "dojo/text!./templates/ExpenseForm.html", "dijit/form/_FormMixin", "dojo/_base/lang", "dojo/date/stamp" ],
+    "dojo/text!./templates/ExpenseForm.html", "dijit/form/_FormMixin", "dojo/_base/lang", "dojo/date/stamp",
+	"dijit/form/DateTextBox", "dijit/form/NumberTextBox", "dijit/form/Select"],
     function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, formTemplate, FormMixin, lang, stamp){
         return declare("components.ExpenseForm", [WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, FormMixin], {
 			templateString: formTemplate,
@@ -22,7 +23,12 @@ define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin", "diji
 			},
 
 			_getExpenseAttr: function() {
-				var expense = lang.clone(this._originalExpense);
+				var expense;
+				if(this._originalExpense) {
+					expense = lang.clone(this._originalExpense);
+				} else {
+					expense = {}
+				}
 				lang.mixin(expense, this.get("value"));
 				expense.expDate = stamp.toISOString(expense.expDate, {selector: "date"});
 				return expense;

@@ -25,31 +25,17 @@
 </head>
 <body class="claro">
 <div class="title">FinTracker</div>
-<div id="expensesEntry" class="expenses hidden" dojoType="dijit.form.Form">
-<!-- form id="expensesEntryForm" -->
-Enter expenses:<br/>
-Amount:<input type="text" name="amount" class="amount" 
-size="10"
-dojoType="dijit.form.NumberTextBox"
-constraints="{min:0, max: 200000, pattern:'#####0.##'}"
-invalidMessage="Should be number"
-required="true"><br/>
-Date:<input type="text" name="expDate" 
-dojoType="dijit.form.DateTextBox"
-required="true"/><br/>
-Category:<select class="category" id="expenseCategory" name="category" 
-	data-dojo-type="dijit.form.Select" data-dojo-props="name: 'category'"></select><br/>
-Comment:<input type="text" name="comment" style="width: 40em" 
-dojoType="dijit.form.TextBox"><br/>
-<input type="button" value="Ok" class="submit"/><br/>
-<!-- /form -->
+<div id="createExpenseArea" class="hidden createExpenseArea">
+Enter expense:<br/>
+<div class="createExpenseForm" data-dojo-type="components.ExpenseForm"></div>
+<input type="button" value="Ok" name="ok"/>
 </div>
 
 <div id="recentExpenses" class="expensesList hidden">
 </div>
 
 <div data-dojo-type="dijit.Dialog" id="editExpenseDialog" title="Edit Expense" style="display: none">
-	<div class="editExpenseForm" data-dojo-type="components.ExpenseForm" data-dojo-attach-point="expenseForm"></div>
+	<div class="editExpenseForm" data-dojo-type="components.ExpenseForm"></div>
 	<button data-dojo-type="dijit.form.Button" type="button" name="ok">OK</button>
 	<button data-dojo-type="dijit.form.Button" type="button" name="cancel">Cancel</button>
 </div>
