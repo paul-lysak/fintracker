@@ -1,6 +1,5 @@
-var DbInit = function(settings) {
-
-dojo.require("dojo.DeferredList");
+define(["dojo/DeferredList"], function(DeferredList) {
+return function(settings) {
 
 this.ensureDbExists = function() {
 	var defExp = ensureStorageExists(settings.storage.expensesStore).then( 
@@ -65,4 +64,4 @@ function uploadDocFromFile(dbName, fileName, docId) {
 }
 
 };//end dbInit
-
+});

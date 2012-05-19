@@ -1,5 +1,4 @@
 - Refactor:
-	- create module for dbInit
 	- generalize expense store service and move it to separate module
 - Unit tests
 

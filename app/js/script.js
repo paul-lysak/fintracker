@@ -9,6 +9,7 @@ dojo.require("dojox.grid.EnhancedGrid");
 dojo.require("dojox.grid.enhanced.plugins.Menu");
 dojo.require("dojox.widget.Toaster");
 dojo.require("components.ExpenseForm");
+dojo.require("components.DbInit");
 dojo.ready(function() {
 window.fintracker = fintracker = {
 	settings: {
@@ -28,7 +29,7 @@ window.fintracker = fintracker = {
 		household: "Household (payments, repairs, etc.)",
 	}
 }
-var dbInit = new DbInit(fintracker.settings);
+var dbInit = new components.DbInit(fintracker.settings);
 
 function displayInfo(msg) {
 	dojo.publish("toasterMessageTopic", {message: msg, type: "info", duration: 1000});
