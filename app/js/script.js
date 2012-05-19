@@ -236,6 +236,10 @@ function RecentExpensesTable(element) {
 	}
 
 	function editSelectedExpense() {
+		return;
+		if(grid.selection.getSelected().length > 1) {
+			return;//TODO don't allow this method to be called when multiple items selected
+		}
 		var selItem = grid.selection.getSelected()[0];
 		expenseEditDialog.edit(getPlainObject(selItem));
 	}
@@ -249,7 +253,9 @@ function RecentExpensesTable(element) {
 				var selItems = grid.selection.getSelected();
 				if(confirm("Do you really want to remove following expenses?\n" +
 					shortExpenseInfo(selItems).join("\n"))) {
-					expensesService.removeExpenses(selItems);
+					expensesService.removeExpenses(selItems).then(function() {
+						grid.selection.clear();
+					});
 				}
 		}}
 	});
@@ -263,8 +269,8 @@ function RecentExpensesTable(element) {
 			grid.selection.clickSelect(event.rowIndex, false, false); //select only clicked item if clicked outside of selection
 		}
 		var selItems = grid.selection.getSelected();
-		var canEdit = (selItems.length > 1);
-		menuItemEdit.set("disabled", !canEdit);
+		var multipleSelection = (selItems.length > 1);
+		menuItemEdit.set("disabled", multipleSelection);
 	});
 }
 
