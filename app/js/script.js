@@ -8,6 +8,7 @@ require(["dojo/_base/lang",
 "dojox/grid/EnhancedGrid",
 "dojox/grid/enhanced/plugins/Menu",
 "dojox/widget/Toaster",
+"components/Utils",
 "components/ExpenseForm",
 "components/DbInit",
 "components/CouchStoreService",
@@ -34,7 +35,18 @@ window.fintracker = fintracker = {
 		household: "Household (payments, repairs, etc.)",
 	}
 }
+
+var utils = components.Utils;
 var dbInit = new components.DbInit(fintracker.settings);
+
+dbInit.ensureDbExists().then(
+	function(succ) {
+		initUI();
+	},
+	function(err) {
+		alert("Failed to create DB", err);
+	});
+
 
 function displayInfo(msg) {
 	dojo.publish("toasterMessageTopic", {message: msg, type: "info", duration: 1000});
@@ -46,23 +58,16 @@ function displayError(msg) {
 
 var expensesService = new components.CouchStoreService(fintracker.settings, "expensesStore");
 
-dbInit.ensureDbExists().then(
-	function(succ) {
-		initUI();
-	},
-	function(err) {
-		alert("Failed to create DB", err);
-	});
-
+var ui = {};
 function initUI() {
-	var expEntry = new ExpensesEntryArea(dojo.byId("createExpenseArea"));
-	var recentExpenses = new RecentExpensesTable(dojo.byId("recentExpenses"));
+	ui.createExpenseArea = new ExpensesEntryArea(dojo.byId("createExpenseArea"));
+	ui.recentExpenses = new RecentExpensesTable(dojo.byId("recentExpenses"));
 }
-var expenseEditDialog = new ExpenseEditDialog(dijit.byId("editExpenseDialog"));
+ui.expenseEditDialog = new ExpenseEditDialog(dijit.byId("editExpenseDialog"));
 
 function ExpensesEntryArea(element) {
 	dojo.removeClass(element, "hidden");
-	var form = getSubWidget(element, ".createExpenseForm");
+	var form = utils.getSubWidget(element, ".createExpenseForm");
 	form.set("categoriesMap", fintracker.categories);
 	form.expDate.set("value", new Date());
 	dojo.query("[name=ok]", element).connect("click", 
@@ -82,20 +87,11 @@ function ExpensesEntryArea(element) {
 		});
 }
 
-function getSubWidget(widgetOrNode, query) {
-	var node = widgetOrNode.domNode;
-	if(node == undefined) {
-		node = widgetOrNode;
-	}
-	var subWidget = dijit.getEnclosingWidget(dojo.query(query, node)[0]);
-	return subWidget;
-}
-
 function ExpenseEditDialog(dialogDijit) {
-	var expenseForm = getSubWidget(dialogDijit, "form.expenseForm");
+	var expenseForm = utils.getSubWidget(dialogDijit, "form.expenseForm");
 	expenseForm.set("categoriesMap", fintracker.categories);
-	var okButton = getSubWidget(dialogDijit, "[name='ok']");
-	var cancelButton = getSubWidget(dialogDijit, "[name='cancel']");
+	var okButton = utils.getSubWidget(dialogDijit, "[name='ok']");
+	var cancelButton = utils.getSubWidget(dialogDijit, "[name='cancel']");
 	okButton.on("click", function() {
 		if(!expenseForm.isValid()) {
 				displayError("Please enter valid data");
@@ -188,7 +184,7 @@ function RecentExpensesTable(element) {
 			return;//TODO don't allow this method to be called when multiple items selected
 		}
 		var selItem = grid.selection.getSelected()[0];
-		expenseEditDialog.edit(getPlainObject(selItem));
+		ui.expenseEditDialog.edit(getPlainObject(selItem));
 	}
 
 	dojo.behavior.add(
