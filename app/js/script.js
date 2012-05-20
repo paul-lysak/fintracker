@@ -1,17 +1,21 @@
-dojo.require("dojo._base.lang");
-dojo.require("dojo.topic");
-dojo.require("dojo.behavior");
-dojo.require("dijit.Dialog");
-dojo.require("dijit.Menu");
-dojo.require("dojox.data.ClientFilter");
-dojo.require("dojox.data.CouchDBRestStore");
-dojo.require("dojox.grid.EnhancedGrid");
-dojo.require("dojox.grid.enhanced.plugins.Menu");
-dojo.require("dojox.widget.Toaster");
-dojo.require("components.ExpenseForm");
-dojo.require("components.DbInit");
-dojo.require("components.CouchStoreService");
-dojo.ready(function() {
+require(["dojo/_base/lang",
+"dojo/topic",
+"dojo/behavior",
+"dijit/Dialog",
+"dijit/Menu",
+"dojox/data/ClientFilter",
+"dojox/data/CouchDBRestStore",
+"dojox/grid/EnhancedGrid",
+"dojox/grid/enhanced/plugins/Menu",
+"dojox/widget/Toaster",
+"components/ExpenseForm",
+"components/DbInit",
+"components/CouchStoreService",
+"dojo/parser",
+"dojo/domReady!"],
+function() {
+dojo.parser.parse();
+
 window.fintracker = fintracker = {
 	settings: {
 		storage: {type: "couchdb",

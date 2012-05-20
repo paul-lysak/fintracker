@@ -1,6 +1,6 @@
 define(["dojox/rpc/Rest"], 
 function(Rest) {
-return function(backendSettings, storeName) {
+return components.CouchStoreService = function(backendSettings, storeName) {
 	var storeURL = backendSettings.storage.url+backendSettings.storage[storeName]+"/";
 
 	var restStore = Rest(storeURL, true);

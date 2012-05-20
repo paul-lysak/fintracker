@@ -1,6 +1,5 @@
 define(["dojo/DeferredList"], function(DeferredList) {
-return function(settings) {
-
+return components.DbInit = function(settings) {
 this.ensureDbExists = function() {
 	var defExp = ensureStorageExists(settings.storage.expensesStore).then( 
 	function() {
