@@ -1,4 +1,4 @@
 - Refactor:
 	- generalize expense store service and move it to separate module
 - Unit tests
-
+- Full keyboard support

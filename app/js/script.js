@@ -10,6 +10,7 @@ dojo.require("dojox.grid.enhanced.plugins.Menu");
 dojo.require("dojox.widget.Toaster");
 dojo.require("components.ExpenseForm");
 dojo.require("components.DbInit");
+dojo.require("components.CouchStoreService");
 dojo.ready(function() {
 window.fintracker = fintracker = {
 	settings: {
@@ -39,64 +40,7 @@ function displayError(msg) {
 	dojo.publish("toasterMessageTopic", {message: msg, type: "error", duration: 3000});
 }
 
-
-
-var expensesService = new function() {
-	//returns deferred with promise containing uuid string
-	function askUuid() {
-		var def = dojo.xhrGet({
-			url: fintracker.settings.storage.url+"_uuids",
-			handleAs: "json"});
-		def = def.then(function(uuidsObj){
-				return uuidsObj.uuids[0];
-				});
-		return def;
-	}
-
-	var expensesStore = dojox.rpc.Rest(fintracker.getExpensesUrl(), true);
-	this.addExpense = function(expense) {
-		console.log("add expense", expense);
-		var def = new dojo.Deferred();
-		askUuid().then(function(uuid) {
-				var p = expensesStore.put(uuid, dojo.toJson(expense)).
-			then(function(put_res) {
-						def.resolve(put_res);
-						dojo.publish("addExpense", expense);
-						},
-					function(put_err) {
-						def.reject(put_err);}
-				);
-		}, function(uuid_err) {
-			def.reject(uuid_err);
-		});
-		return def;
-	}
-
-	this.removeExpenses = function(expenses) {
-		var def;
-		if(expenses.length == 1) {
-			var item = expenses[0];
-			def = expensesStore.delete(item._id+"?rev="+item._rev);	
-		} else {
-			var bulkBody = {docs: []};
-			expenses.forEach(function(item) {
-				bulkBody.docs.push({_id: item._id, _rev: item._rev, _deleted: true});
-			});
-			def = expensesStore.post("_bulk_docs", dojo.toJson(bulkBody));
-		}
-		return def.then(function() {
-			dojo.publish("removeExpenses", expenses);
-		});
-	}
-
-	this.updateExpense = function(expense) {
-		console.log("updateExpense", expense);
-		return expensesStore.put(expense._id, dojo.toJson(expense)).then(
-			function() {
-				dojo.publish("updateExpense", expense);
-			});
-	}
-};
+var expensesService = new components.CouchStoreService(fintracker.settings, "expensesStore");
 
 dbInit.ensureDbExists().then(
 	function(succ) {
@@ -124,7 +68,7 @@ function ExpensesEntryArea(element) {
 				return;
 			}
 			var expense = form.get("expense"); 
-			expensesService.addExpense(expense).then(function(res) {
+			expensesService.insert(expense).then(function(res) {
 				//reset all fields except of date
 				form.amount.reset();
 				form.category.reset();
@@ -154,7 +98,7 @@ function ExpenseEditDialog(dialogDijit) {
 				return;
 			}
 		var updatedExpense = expenseForm.get("expense"); 
-		expensesService.updateExpense(updatedExpense).then(
+		expensesService.update(updatedExpense).then(
 			function() {displayInfo("Expense updated");}, 
 			function() {displayError("Failed to update expense.");});
 		dialogDijit.hide();
@@ -214,9 +158,9 @@ function RecentExpensesTable(element) {
 	function refreshGrid(expense) {
 		grid.setQuery(grid.query); //this seems to be only way to refresh grid without private methods
 	}
-	dojo.subscribe("addExpense", refreshGrid);
-	dojo.subscribe("updateExpense", refreshGrid);
-	dojo.subscribe("removeExpenses", refreshGrid);
+	dojo.subscribe("insert_expensesStore", refreshGrid);
+	dojo.subscribe("remove_expensesStore", refreshGrid);
+	dojo.subscribe("update_expensesStore", refreshGrid);
 
 	/**
 	* Strip down some garbage after JsonRestStore
@@ -236,7 +180,6 @@ function RecentExpensesTable(element) {
 	}
 
 	function editSelectedExpense() {
-		return;
 		if(grid.selection.getSelected().length > 1) {
 			return;//TODO don't allow this method to be called when multiple items selected
 		}
@@ -253,7 +196,7 @@ function RecentExpensesTable(element) {
 				var selItems = grid.selection.getSelected();
 				if(confirm("Do you really want to remove following expenses?\n" +
 					shortExpenseInfo(selItems).join("\n"))) {
-					expensesService.removeExpenses(selItems).then(function() {
+					expensesService.remove(selItems).then(function() {
 						grid.selection.clear();
 					});
 				}
