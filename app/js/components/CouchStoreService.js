@@ -1,8 +1,10 @@
-define(["dojo/DeferredList"], 
-function(DeferredList) {
+define(["dojox/rpc/Rest"], 
+function(Rest) {
 return function(backendSettings, storeName) {
 	var storeURL = backendSettings.storage.url+backendSettings.storage[storeName]+"/";
 
+	var restStore = Rest(storeURL, true);
+	
 	//returns deferred with promise containing uuid string
 	this.askUuid = function() {
 		var def = dojo.xhrGet({
@@ -14,7 +16,6 @@ return function(backendSettings, storeName) {
 		return def;
 	}
 
-	var restStore = dojox.rpc.Rest(fintracker.getExpensesUrl(), true);
 	this.insert = function(obj) {
 		var def = new dojo.Deferred();
 		this.askUuid().then(function(uuid) {
