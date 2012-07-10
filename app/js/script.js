@@ -1,6 +1,8 @@
 require(["dojo/_base/lang",
+"dojo/on",
 "dojo/topic",
 "dojo/behavior",
+"dojo/parser",
 "dijit/Dialog",
 "dijit/Menu",
 "dojox/data/ClientFilter",
@@ -12,9 +14,8 @@ require(["dojo/_base/lang",
 "components/ExpenseForm",
 "components/DbInit",
 "components/CouchStoreService",
-"dojo/parser",
 "dojo/domReady!"],
-function() {
+function(lang, on, topic, behavior, parser) {
 dojo.parser.parse();
 
 window.fintracker = fintracker = {
@@ -62,6 +63,8 @@ var ui = {};
 function initUI() {
 	ui.createExpenseArea = new ExpensesEntryArea(dojo.byId("createExpenseArea"));
 	ui.recentExpenses = new RecentExpensesTable(dojo.byId("recentExpenses"));
+	ui.expensesDateFilter = new DateFilter(dijit.byId("expensesDateFilterDialog"), 
+		dojo.byId("expensesDateFilter"));
 }
 ui.expenseEditDialog = new ExpenseEditDialog(dijit.byId("editExpenseDialog"));
 
@@ -84,6 +87,18 @@ function ExpensesEntryArea(element) {
 				form.comment.reset();
 				displayInfo("Expense added");
 			}, function() {displayError("Failed to add expense.");});
+		});
+}
+
+function DateFilter(dialogDijit, starter) {
+	var closeButton = utils.getSubWidget(dialogDijit, "[name='close']");
+	closeButton.on("click", function() {
+//		dialogDijit.reset();
+		dialogDijit.hide();
+		});
+		//TODO here should go tree with date filter
+	on(starter, "click", function(ev) {
+		dialogDijit.show();
 		});
 }
 
