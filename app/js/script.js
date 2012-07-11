@@ -3,8 +3,11 @@ require(["dojo/_base/lang",
 "dojo/topic",
 "dojo/behavior",
 "dojo/parser",
+"dojo/store/Memory",
+"dojo/data/ObjectStore",
 "dijit/Dialog",
 "dijit/Menu",
+"dijit/Tree",
 "dojox/data/ClientFilter",
 "dojox/data/CouchDBRestStore",
 "dojox/grid/EnhancedGrid",
@@ -92,6 +95,23 @@ function ExpensesEntryArea(element) {
 
 function DateFilter(dialogDijit, starter) {
 	var closeButton = utils.getSubWidget(dialogDijit, "[name='close']");
+	var dates = [{id: "2010", label: "2010"},
+				{id: "2011", label: "2011"},
+				{id: "2012", label: "2012", children:[ 
+					{id: "2012-01", label: "January"},
+					{id: "2012-02", label: "February"},
+					{id: "2012-03", label: "March"}
+					]
+				}];
+	var mStore = new dojo.store.Memory({data: dates});
+	var model = new dijit.tree.ForestStoreModel({
+		store: new dojo.data.ObjectStore({objectStore: mStore})
+	});
+	var tree = new dijit.Tree({
+		model: model,
+		showRoot: false
+	}, "expensesDateTree");
+	tree.startup();
 	closeButton.on("click", function() {
 //		dialogDijit.reset();
 		dialogDijit.hide();
@@ -99,7 +119,7 @@ function DateFilter(dialogDijit, starter) {
 		//TODO here should go tree with date filter
 	on(starter, "click", function(ev) {
 		dialogDijit.show();
-		});
+	});
 }
 
 function ExpenseEditDialog(dialogDijit) {

@@ -1,4 +1,6 @@
 - Filter expenses by time
+	- Dynamically generate tree
+	- Make selection work
 - Sort expenses on the client-side
 - Unit tests
 - Full keyboard support
