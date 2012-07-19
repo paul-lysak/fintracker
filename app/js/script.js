@@ -3,6 +3,7 @@ require(["dojo/_base/lang",
 "dojo/topic",
 "dojo/behavior",
 "dojo/parser",
+"dojo/date/locale",
 "dojo/store/Memory",
 "dojo/data/ObjectStore",
 "dijit/Dialog",
@@ -95,14 +96,26 @@ function ExpensesEntryArea(element) {
 
 function DateFilter(dialogDijit, starter) {
 	var closeButton = utils.getSubWidget(dialogDijit, "[name='close']");
-	var dates = [{id: "2010", label: "2010"},
-				{id: "2011", label: "2011"},
-				{id: "2012", label: "2012", children:[ 
-					{id: "2012-01", label: "January"},
-					{id: "2012-02", label: "February"},
-					{id: "2012-03", label: "March"}
-					]
-				}];
+	function generateMonthTree(yearsCount) {
+		var dates = [];
+		var nowYear = (new Date()).getFullYear();
+		var nowMonth = (new Date()).getMonth()+1; 
+		function generateMonthArray(year, lastMonth) {
+			var monthArray = [];
+			for(var month=1; month<=lastMonth; month++) {
+				var monthStr = month<10?"0"+month:month;
+				var monthName = dojo.date.locale.getNames("months", "wide")[month];
+				monthArray.push({id: year+"-"+monthStr, label: monthName});
+			}
+			return monthArray;
+		}
+		for(var year=nowYear-yearsCount+1;year<nowYear;year++) {
+			dates.push({id: year, label: year, children: generateMonthArray(year, 12)});
+		}
+		dates.push({id: year, label: year, children: generateMonthArray(year, nowMonth)});
+		return dates;
+	}
+	var dates = generateMonthTree(5);
 	var mStore = new dojo.store.Memory({data: dates});
 	var model = new dijit.tree.ForestStoreModel({
 		store: new dojo.data.ObjectStore({objectStore: mStore})

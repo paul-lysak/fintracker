@@ -1,8 +1,9 @@
 - Filter expenses by time
-	- Dynamically generate tree
+	- Put a scroll around tree
 	- Retrieve dates interval from tree selection
 	- Display dates interval
 	- Apply filter on dates interval
 - Sort expenses on the client-side
 - Unit tests
 - Full keyboard support
+- Lazy initialization of UI parts
