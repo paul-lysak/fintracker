@@ -1,7 +1,6 @@
 - Filter expenses by time
-	- Put a scroll around tree
-	- Retrieve dates interval from tree selection
-	- Display dates interval
+	- Fix a scroll around tree. Currently dialog tries to expand itself and no scrollbar appears
+	- Add ability to resize dialog
 	- Apply filter on dates interval
 - Sort expenses on the client-side
 - Unit tests

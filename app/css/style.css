@@ -12,3 +12,8 @@
 /*width: 400px;
 */
 }
+
+.dialogContent {
+	overflow-y: auto;
+	height: 90%;
+}

@@ -69,8 +69,8 @@ function initUI() {
 	ui.recentExpenses = new RecentExpensesTable(dojo.byId("recentExpenses"));
 	ui.expensesDateFilter = new DateFilter(dijit.byId("expensesDateFilterDialog"), 
 		dojo.byId("expensesDateFilter"));
+	ui.expenseEditDialog = new ExpenseEditDialog(dijit.byId("editExpenseDialog"));
 }
-ui.expenseEditDialog = new ExpenseEditDialog(dijit.byId("editExpenseDialog"));
 
 function ExpensesEntryArea(element) {
 	dojo.removeClass(element, "hidden");
@@ -110,7 +110,7 @@ function DateFilter(dialogDijit, starter) {
 			return monthArray;
 		}
 		for(var year=nowYear-yearsCount+1;year<nowYear;year++) {
-			dates.push({id: year, label: year, children: generateMonthArray(year, 12)});
+			dates.push({id: year+"", label: year, children: generateMonthArray(year, 12)});
 		}
 		dates.push({id: year, label: year, children: generateMonthArray(year, nowMonth)});
 		return dates;
@@ -126,12 +126,34 @@ function DateFilter(dialogDijit, starter) {
 	}, "expensesDateTree");
 	tree.startup();
 	closeButton.on("click", function() {
-//		dialogDijit.reset();
 		dialogDijit.hide();
 		});
-		//TODO here should go tree with date filter
 	on(starter, "click", function(ev) {
 		dialogDijit.show();
+	});
+	topic.subscribe("expensesDateTree", function(msg) {
+		var month = tree.get("selectedItems");
+		month = dojo.map(month, function(item) {return item.id});
+		var fromMonth = null;
+		var toMonth = null;
+		for(var i=0; i<month.length; i++) {
+			if(fromMonth == null || fromMonth > month[i]) 
+				fromMonth = month[i];
+			if(toMonth == null || toMonth < month[i])
+				toMonth = month[i];
+		}
+		if(fromMonth.length != null && fromMonth.length == 4)
+			fromMonth = fromMonth + "-01";
+		if(toMonth.length != null && toMonth.length == 4)
+			toMonth = toMonth + "-12";
+		if(fromMonth == null) {
+			starter.innerHTML = "none";
+		} else if(fromMonth == toMonth) {
+			starter.innerHTML = fromMonth;
+		} else {
+			starter.innerHTML = "from "+fromMonth+" to "+toMonth;
+		}
+		dojo.publish("expensesDateFilter", {"fromMonth": fromMonth, "toMonth": toMonth}); 
 	});
 }
 
