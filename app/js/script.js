@@ -3,6 +3,7 @@ require(["dojo/_base/lang",
 "dojo/topic",
 "dojo/behavior",
 "dojo/parser",
+"dojo/io-query",
 "dojo/date/locale",
 "dojo/store/Memory",
 "dojo/data/ObjectStore",
@@ -19,7 +20,7 @@ require(["dojo/_base/lang",
 "components/DbInit",
 "components/CouchStoreService",
 "dojo/domReady!"],
-function(lang, on, topic, behavior, parser) {
+function(lang, on, topic, behavior, parser, ioQuery) {
 dojo.parser.parse();
 
 window.fintracker = fintracker = {
@@ -104,7 +105,7 @@ function DateFilter(dialogDijit, starter) {
 			var monthArray = [];
 			for(var month=1; month<=lastMonth; month++) {
 				var monthStr = month<10?"0"+month:month;
-				var monthName = dojo.date.locale.getNames("months", "wide")[month];
+				var monthName = dojo.date.locale.getNames("months", "wide")[month-1];
 				monthArray.push({id: year+"-"+monthStr, label: monthName});
 			}
 			return monthArray;
@@ -209,9 +210,11 @@ function shortExpenseInfo(expenseItems, maxItems, maxDescr) {
 function RecentExpensesTable(element) {
 	dojo.removeClass(element, "hidden");
 	var couchStore = new dojox.data.CouchDBRestStore({
-		target: fintracker.getExpensesUrl()});;
+		target: fintracker.getExpensesUrl()});
+	var query = "_design/logic/_view/byDate?"; 
+	var queryArgs = {};
  	var grid = dojox.grid.EnhancedGrid({store: couchStore,
-			query: "_design/logic/_view/byDate?",
+			query: query, 
 //			queryOptions: {cache: true},//TODO make sorting work
 			canSort: function() {return false},
 			autoHeight: true, autoWidth: true,
@@ -232,6 +235,12 @@ function RecentExpensesTable(element) {
 	dojo.subscribe("remove_expensesStore", refreshGrid);
 	dojo.subscribe("update_expensesStore", refreshGrid);
 
+	dojo.subscribe("expensesDateFilter", function(filter) {
+		queryArgs.startkey = "\""+filter.fromMonth+"-01\"";
+		queryArgs.endkey = "\""+filter.toMonth+"-31\"";
+		var fullQuery = query + ioQuery.objectToQuery(queryArgs);
+		grid.setQuery(fullQuery); 
+	});
 	/**
 	* Strip down some garbage after JsonRestStore
 	*/	
