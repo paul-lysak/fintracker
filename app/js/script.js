@@ -4,6 +4,8 @@ require(["dojo/_base/lang",
 "dojo/behavior",
 "dojo/parser",
 "dojo/io-query",
+"dojo/window",
+"dojo/dom-style",
 "dojo/date/locale",
 "dojo/store/Memory",
 "dojo/data/ObjectStore",
@@ -20,7 +22,7 @@ require(["dojo/_base/lang",
 "components/DbInit",
 "components/CouchStoreService",
 "dojo/domReady!"],
-function(lang, on, topic, behavior, parser, ioQuery) {
+function(lang, on, topic, behavior, parser, ioQuery, winUtils, domStyle) {
 dojo.parser.parse();
 
 window.fintracker = fintracker = {
@@ -97,6 +99,7 @@ function ExpensesEntryArea(element) {
 
 function DateFilter(dialogDijit, starter) {
 	var closeButton = utils.getSubWidget(dialogDijit, "[name='close']");
+	var dialogContent = dojo.query(".dialogContent", dialogDijit.domNode)[0];
 	function generateMonthTree(yearsCount) {
 		var dates = [];
 		var nowYear = (new Date()).getFullYear();
@@ -130,6 +133,8 @@ function DateFilter(dialogDijit, starter) {
 		dialogDijit.hide();
 		});
 	on(starter, "click", function(ev) {
+		var viewport = winUtils.getBox();
+		domStyle.set(dialogContent, {height: viewport.h*0.75+"px"});
 		dialogDijit.show();
 	});
 	topic.subscribe("expensesDateTree", function(msg) {

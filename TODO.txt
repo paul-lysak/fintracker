@@ -1,7 +1,10 @@
-- Filter expenses by time
-	- Fix a scroll around tree. Currently dialog tries to expand itself and no scrollbar appears
-	- Add ability to resize dialog
+- Move date filter into separate component
 - Sort expenses on the client-side
 - Unit tests
 - Full keyboard support
 - Lazy initialization of UI parts
+
+Low priority:
+- Filter expenses by time
+	- Add ability to resize dialog
+
