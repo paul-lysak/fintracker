@@ -31,18 +31,13 @@ Enter expense:<br/>
 <input type="button" value="Ok" name="ok"/>
 </div>
 
-Date filter: <a id="expensesDateFilter" href="#">none</a><br/>
+Date filter: <a id="expensesDateFilterLauncher" href="#">none</a><br/>
 
 <div id="recentExpenses" class="expensesList hidden">
 </div>
 
-<div data-dojo-type="dijit.Dialog" id="expensesDateFilterDialog" title="Expenses Date Filter" style="display: none">
-	<div class="dialogContent">
-		<div id="expensesDateTree"></div>
-	</div>
-	<button data-dojo-type="dijit.form.Button" type="button" name="close">Close</button>
-</div>
 
+<div id="dateFilterDialog" data-dojo-type="components.DateFilterDialog"></div>
 
 <div data-dojo-type="dijit.Dialog" id="editExpenseDialog" title="Edit Expense" style="display: none">
 	<div class="editExpenseForm" data-dojo-type="components.ExpenseForm"></div>

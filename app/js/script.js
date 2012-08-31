@@ -21,7 +21,7 @@ require(["dojo/_base/lang",
 "components/ExpenseForm",
 "components/DbInit",
 "components/CouchStoreService",
-"components/DateFilter",
+"components/DateFilterDialog",
 "dojo/domReady!"],
 function(lang, on, topic, behavior, parser, ioQuery, winUtils, domStyle) {
 dojo.parser.parse();
@@ -71,8 +71,10 @@ var ui = {};
 function initUI() {
 	ui.createExpenseArea = new ExpensesEntryArea(dojo.byId("createExpenseArea"));
 	ui.recentExpenses = new RecentExpensesTable(dojo.byId("recentExpenses"));
-	ui.expensesDateFilter = new components.DateFilter(dijit.byId("expensesDateFilterDialog"), 
-		dojo.byId("expensesDateFilter"));
+//	ui.expensesDateFilter = new components.DateFilter(dijit.byId("expensesDateFilterDialog"), 
+//		dojo.byId("expensesDateFilter"));
+	ui.expensesDateFilterDialog = dijit.byId("dateFilterDialog");
+	ui.expensesDateFilterDialog.setLauncher(dojo.byId("expensesDateFilterLauncher"));
 	ui.expenseEditDialog = new ExpenseEditDialog(dijit.byId("editExpenseDialog"));
 }
 
