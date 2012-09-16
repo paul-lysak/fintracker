@@ -3,5 +3,9 @@
 		"byDate": {
 			"map": "function(doc) {emit(doc.expDate, doc); /*TODO avoid emitting doc*/}" 
 		}
+	},
+	"lists": {
+		"test": "function(head, req) {var row, out='_id,amount\\n'; while(row=getRow()) {out += row.value._id+','+row.value.amount+'\\n';}; return out;}",
+		"probe": "function() {return 'hi there'}"
 	}
 }

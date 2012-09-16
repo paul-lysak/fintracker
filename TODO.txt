@@ -1,4 +1,14 @@
-- Move date filter into separate component
+- Import/export into CSV
+	- export
+		- list function
+		- UI for calling list
+	- import
+- DB security
+- Status tracking
+- Optimize DB queries (e.g. avoid emiting documents)
+- Offline mode support
+- Configure DB location and store it in browser storage
+
 - Sort expenses on the client-side
 - Unit tests
 - Full keyboard support
