@@ -1,11 +1,12 @@
 {"_id": "_design/logic",
+	"utils": "exports.objToCsv = function(obj) {return 'hi all';} /*TODO*/",
 	"views": {
 		"byDate": {
 			"map": "function(doc) {emit(doc.expDate, doc); /*TODO avoid emitting doc*/}" 
 		}
 	},
 	"lists": {
-		"test": "function(head, req) {var row, out='_id,amount\\n'; while(row=getRow()) {out += row.value._id+','+row.value.amount+'\\n';}; return out;}",
+		"test": "function(head, req) {var utils = require('utils'); var row, outRows=['_id,amount']; while(row=getRow()) {outRows.push(utils.objToCsv(row.value));}; return outRows.join('\\n');}",
 		"probe": "function() {return 'hi there'}"
 	}
 }
