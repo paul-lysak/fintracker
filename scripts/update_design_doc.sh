@@ -16,7 +16,8 @@ case "$old_design" in
 	curl -s -X DELETE $EXP_DESIGN_URI?rev=$rev
 	;;
 esac
-echo uploading _design/logic document...
-curl -T../app/js/db/logic.json $EXP_DESIGN_URI
-echo design doc update complete
+#TODO find command-line utility to convert js to json
+#echo uploading _design/logic document...
+#curl -T../app/js/db/logic.json $EXP_DESIGN_URI
+#echo design doc update complete
 

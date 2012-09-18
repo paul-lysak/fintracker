@@ -5,7 +5,7 @@ this.ensureDbExists = function() {
 	function() {
 		console.log("on expenses ensured");
 		return ensureDesignDoc(settings.storage.expensesStore, 
-			"js/db/logic.json", "/_design/logic");
+			"js/db/logic.js", "/_design/logic");
 		});
 	var defStat = ensureStorageExists(settings.storage.statusStore);
 	var defAll = new dojo.DeferredList([defExp, defStat]);
@@ -55,6 +55,10 @@ function uploadDocFromFile(dbName, fileName, docId) {
 	return dojo.xhrGet({
 		url: fileName
 	}).then(function(content) { 
+		var jsTail = ".js";
+		if(fileName.substr(-jsTail.length) == jsTail) {//TODO extract function
+			content = dojo.toJson(dojo.fromJson(content));
+		}
 		return dojo.xhrPut({
 			url: settings.storage.url+dbName+docId,
 			putData: content
