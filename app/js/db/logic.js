@@ -7,7 +7,7 @@
 					"if(ret != '') ret += ', ';"+
 					"ret += key}"+
 					"return ret;};\n"+
-		"exports.objToCsv = function(obj) { "+
+		"exports.getCsvRow = function(obj) { "+
 					"var ret = '';"+
 					"for(key in obj) {"+
 					"if(!obj.hasOwnProperty(key)) continue;"+
@@ -22,7 +22,17 @@
 		}
 	},
 	"lists": {//TODO CSV header
-		"asCsv": "function(head, req) {var utils = require('utils'); var row, outRows=['_id,amount']; while(row=getRow()) {outRows.push(utils.objToCsv(row.value));}; return outRows.join('\\n');}",
+		"asCsv": "function(head, req) {"+
+		"var utils = require('utils');"+
+		"var outRows=[];"+
+		"var row=getRow();"+
+		"if(!row) return '';"+
+		"outRows.push(utils.getCsvHeader(row.value));"+
+		"while(row) {"+
+			"outRows.push(utils.getCsvRow(row.value));"+
+			"row=getRow();"+
+		"};"+
+		"return outRows.join('\\n');}",
 		"probe": "function() {return 'hi there'}"
 	}
 }

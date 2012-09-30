@@ -6,6 +6,7 @@ require(["dojo/_base/lang",
 "dojo/io-query",
 "dojo/window",
 "dojo/dom-style",
+"dojo/dom-attr",
 "dojo/date/locale",
 "dojo/store/Memory",
 "dojo/data/ObjectStore",
@@ -23,7 +24,7 @@ require(["dojo/_base/lang",
 "components/CouchStoreService",
 "components/DateFilterDialog",
 "dojo/domReady!"],
-function(lang, on, topic, behavior, parser, ioQuery, winUtils, domStyle) {
+function(lang, on, topic, behavior, parser, ioQuery, winUtils, domStyle, domAttr) {
 dojo.parser.parse();
 
 window.fintracker = fintracker = {
@@ -76,6 +77,12 @@ function initUI() {
 	ui.expensesDateFilterDialog = dijit.byId("dateFilterDialog");
 	ui.expensesDateFilterDialog.setLauncher(dojo.byId("expensesDateFilterLauncher"));
 	ui.expenseEditDialog = new ExpenseEditDialog(dijit.byId("editExpenseDialog"));
+	initExport();
+}
+
+function initExport() {
+	var allQuery = "_design/logic/_list/asCsv/byDate?"; 
+	domAttr.set(dojo.byId("exportCsvAll"), "href", fintracker.getExpensesUrl()+allQuery);
 }
 
 function ExpensesEntryArea(element) {
