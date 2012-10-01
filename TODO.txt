@@ -1,8 +1,7 @@
 - Script for updating design doc
 - Import/export into CSV
 	- export
-		- list function
-		- UI for calling list
+		- UI to filter by date 
 	- import
 - DB security
 - Status tracking
@@ -16,6 +15,7 @@
 - Lazy initialization of UI parts
 
 Low priority:
+- Scripts for preprocessing DB logic scripts that will allow to upload it without web-interface and write file as plain .js
 - Filter expenses by time
 	- Add ability to resize dialog
 

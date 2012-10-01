@@ -4,16 +4,27 @@
 					"var ret = '';"+
 					"for(key in obj) {"+
 					"if(!obj.hasOwnProperty(key)) continue;"+
-					"if(ret != '') ret += ', ';"+
+					"if(ret != '') ret += ',';"+
 					"ret += key}"+
 					"return ret;};\n"+
 		"exports.getCsvRow = function(obj) { "+
-					"var ret = '';"+
+					"function escapeCsvStr(val) {"+
+						"return '\"'+val.replace(/\"/g, '\"\"')+'\"'"+
+					"}"+
+					"function formatVal(val) {"+
+						"if(typeof val == 'string') {"+
+							"return escapeCsvStr(val);"+
+						"} else {"+
+							"return val.toString();"+
+						"}"+
+					"}"+
+					"var cols = [];"+
 					"for(key in obj) {"+
-					"if(!obj.hasOwnProperty(key)) continue;"+
-					"if(ret != '') ret += ', ';"+
-					"ret += obj[key]}"+
-					"return ret;}\n", //TODO escaping
+						"if(!obj.hasOwnProperty(key)) continue;"+
+						"cols.push(formatVal(obj[key]))"+
+					"}"+
+					"return cols.join(',');"+
+				"}", 
 
 	"views": {
 		"byDate": {
@@ -21,18 +32,20 @@
 						"/*TODO avoid emitting doc*/}" 
 		}
 	},
-	"lists": {//TODO CSV header
+	"lists": {
 		"asCsv": "function(head, req) {"+
-		"var utils = require('utils');"+
-		"var outRows=[];"+
-		"var row=getRow();"+
-		"if(!row) return '';"+
-		"outRows.push(utils.getCsvHeader(row.value));"+
-		"while(row) {"+
-			"outRows.push(utils.getCsvRow(row.value));"+
-			"row=getRow();"+
-		"};"+
-		"return outRows.join('\\n');}",
-		"probe": "function() {return 'hi there'}"
+				"start({headers: {'content-type': 'text/csv'}});"+
+				"var utils = require('utils');"+
+				"var outRows=[];"+
+				"var row=getRow();"+
+				"if(!row) return '';"+
+				"send(utils.getCsvHeader(row.value));"+
+				"send('\\n');"+
+				"while(row) {"+
+					"send(utils.getCsvRow(row.value));"+
+					"send('\\n');"+
+					"row=getRow();"+
+				"};"+
+			"}"
 	}
 }
