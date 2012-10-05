@@ -72,8 +72,6 @@ var ui = {};
 function initUI() {
 	ui.createExpenseArea = new ExpensesEntryArea(dojo.byId("createExpenseArea"));
 	ui.recentExpenses = new RecentExpensesTable(dojo.byId("recentExpenses"));
-//	ui.expensesDateFilter = new components.DateFilter(dijit.byId("expensesDateFilterDialog"), 
-//		dojo.byId("expensesDateFilter"));
 	ui.expensesDateFilterDialog = dijit.byId("dateFilterDialog");
 	ui.expensesDateFilterDialog.setLauncher(dojo.byId("expensesDateFilterLauncher"));
 	ui.expenseEditDialog = new ExpenseEditDialog(dijit.byId("editExpenseDialog"));
@@ -83,6 +81,13 @@ function initUI() {
 function initExport() {
 	var allQuery = "_design/logic/_list/asCsv/byDate?"; 
 	domAttr.set(dojo.byId("exportCsvAll"), "href", fintracker.getExpensesUrl()+allQuery);
+	domAttr.set(dojo.byId("exportCsvFiltered"), "href", fintracker.getExpensesUrl()+allQuery);
+	dojo.subscribe("expensesDateFilter", function(filter) {
+		var args = {startkey: '"'+filter.fromMonth+'-01"', 
+				endkey: '"'+filter.toMonth+'-31"'};
+		domAttr.set(dojo.byId("exportCsvFiltered"), "href", fintracker.getExpensesUrl()+allQuery+dojo.objectToQuery(args));
+	});
+
 }
 
 function ExpensesEntryArea(element) {

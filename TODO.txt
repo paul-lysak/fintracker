@@ -4,6 +4,7 @@
 		- UI to filter by date 
 	- import
 - DB security
+- organize import/export links in more usable way
 - Status tracking
 - Optimize DB queries (e.g. avoid emiting documents)
 - Offline mode support
