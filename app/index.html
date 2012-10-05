@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>FinTracker</title>
   <link rel="stylesheet" href="js/lib/dojo-release-1.7.1/dojox/grid/enhanced/resources/claro/EnhancedGrid.css"/>
-<link media="screen" href="js/lib/dojo-release-1.7.1/dijit/themes/claro/claro.css" rel="stylesheet">
+  <link media="screen" href="js/lib/dojo-release-1.7.1/dijit/themes/claro/claro.css" rel="stylesheet">
   <link rel="stylesheet" href="js/lib/dojo-release-1.7.1/dojox/widget/Toaster/Toaster.css"/>
   <link rel="stylesheet" type="text/css" href="css/style.css"/>
 	<script>
@@ -36,12 +36,15 @@ Date filter: <a id="expensesDateFilterLauncher" href="#">none</a><br/>
 Export to CSV:
 [<a href="#" id="exportCsvAll" target="_blank">all</a> |
 <a href="#" id="exportCsvFiltered" target="_blank">filtered</a>]
+<br/>
+<a href="#" id="importCsv">Import from CSV</a> 
 
 <div id="recentExpenses" class="expensesList hidden">
 </div>
 
 
 <div id="dateFilterDialog" data-dojo-type="components.DateFilterDialog"></div>
+<div id="importExpensesDialog" data-dojo-type="components.ImportFileDialog"></div>
 
 <div data-dojo-type="dijit.Dialog" id="editExpenseDialog" title="Edit Expense" style="display: none">
 	<div class="editExpenseForm" data-dojo-type="components.ExpenseForm"></div>

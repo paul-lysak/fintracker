@@ -1,14 +1,18 @@
-- Script for updating design doc
-- Import/export into CSV
-	- export
-		- UI to filter by date 
-	- import
+- Prevent default action for import/export
+- Import from CSV
+	- read file by chunks
+	- convert to JSON
+	- upload to server
+	- handle ID conflict
+	- think about transactionality
 - DB security
+- Configure DB location and store it in browser storage
 - organize import/export links in more usable way
+- Clean up installation/start scripts
+- Write installation manual
 - Status tracking
 - Optimize DB queries (e.g. avoid emiting documents)
 - Offline mode support
-- Configure DB location and store it in browser storage
 
 - Sort expenses on the client-side
 - Unit tests
@@ -16,6 +20,8 @@
 - Lazy initialization of UI parts
 
 Low priority:
+- Refactor DateFilterDialog: it should create a link and a dialog as a single component.
+- Refactor all dialogs - make sure they are inherited from Dialog
 - Scripts for preprocessing DB logic scripts that will allow to upload it without web-interface and write file as plain .js
 - Filter expenses by time
 	- Add ability to resize dialog
