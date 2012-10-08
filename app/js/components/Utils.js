@@ -12,6 +12,13 @@ Utils.getSubWidget = function(widgetOrNode, query) {
 		return subWidget;
 	}	
 
+Utils.min = function(a, b) {
+		return a<b?a:b;
+	}
+
+Utils.max = function(a, b) {
+		return a>b?a:b;
+	}
 return Utils;
 });
 	

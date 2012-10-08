@@ -1,5 +1,8 @@
 - Prevent default action for import/export
+- Provide name for exported files via headers
 - Import from CSV
+	- design dialog-handler interaction
+	- dynamically load handler
 	- read file by chunks
 	- convert to JSON
 	- upload to server
@@ -20,6 +23,7 @@
 - Lazy initialization of UI parts
 
 Low priority:
+- Move CSV parser out to separate project
 - Refactor DateFilterDialog: it should create a link and a dialog as a single component.
 - Refactor all dialogs - make sure they are inherited from Dialog
 - Scripts for preprocessing DB logic scripts that will allow to upload it without web-interface and write file as plain .js
