@@ -1,8 +1,5 @@
-- Upgrade DOJO
-- Unit tests - without them can't proceed with CSV parsing
-- Prevent default action for import/export
-- Provide name for exported files via headers
 - Import from CSV
+	- write tests
 	- design dialog-handler interaction
 	- dynamically load handler
 	- read file by chunks
@@ -10,6 +7,8 @@
 	- upload to server
 	- handle ID conflict
 	- think about transactionality
+- Prevent default action for import/export
+- Provide name for exported files via headers
 - DB security
 - Configure DB location and store it in browser storage
 - organize import/export links in more usable way
