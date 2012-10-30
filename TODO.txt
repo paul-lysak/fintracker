@@ -1,3 +1,5 @@
+- Upgrade DOJO
+- Unit tests - without them can't proceed with CSV parsing
 - Prevent default action for import/export
 - Provide name for exported files via headers
 - Import from CSV
@@ -18,7 +20,6 @@
 - Offline mode support
 
 - Sort expenses on the client-side
-- Unit tests
 - Full keyboard support
 - Lazy initialization of UI parts
 
