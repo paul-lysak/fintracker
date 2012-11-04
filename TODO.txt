@@ -1,7 +1,7 @@
 - Import from CSV
-	- write tests
+	- design parser API
+	- write tests for CSV parsing
 	- design dialog-handler interaction
-	- dynamically load handler
 	- read file by chunks
 	- convert to JSON
 	- upload to server

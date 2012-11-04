@@ -1,10 +1,57 @@
-define(["doh/runner"], function(doh){
+define(["doh/runner", "components/Utils", "components/CsvBatchParser"], function(doh, utils, CsvBatchParser){
 //TODO actual tests
-    doh.register("CSV converter", [
-      function assertTrueTest(){
-        doh.assertTrue(true);
-        doh.assertTrue(1);
+	doh.register("Utils", [
+		function testMin() {
+			doh.assertEqual(3, utils.min(3,4));
+			doh.assertEqual(5, utils.min(5,5));
+			doh.assertEqual(6, utils.min(6,7));
+		},
+		function testMax() {
+			doh.assertEqual(4, utils.max(3,4));
+			doh.assertEqual(5, utils.max(5,5));
+			doh.assertEqual(7, utils.max(6,7));
+		}
+
+	]);
+
+	function assertArrayLength(len, array) {
+		doh.assertTrue("length" in array);
+		doh.assertEqual(len, array.length);
+	}
+
+    doh.register("CsvBatchParser", [
+      function testParseHead() {
+	  	var parser = new CsvBatchParser(); 
+		var batch;
+		batch = parser.parse("first field, second field, \"third field\"");
+        assertArrayLength(0, batch);
+		batch = parser.end();
+        assertArrayLength(0, batch);
+		assertArrayLength(3, parser._fieldKeys);
+	    doh.assertEqual(["first field", "second field", "third field"], parser._fieldKeys);	
       },
+
+	  function testParseOneRow() {
+		var parser = new CsvBatchParser(); 
+		var batch;
+		batch = parser.parse("one, two\noneVal, twoVal");
+        assertArrayLength(0, batch);
+		batch = parser.end();
+	    doh.assertEqual([{one: "oneVal", two: "twoVal"}], batch);	
+	  },
+
+	  function testParseTwoRow() {
+		var parser = new CsvBatchParser(); 
+		var batch;
+		batch = parser.parse("one, two\noneRowOne, twoRowOne");
+        assertArrayLength(0, batch);
+		batch = parser.parse("oneRowTwo, twoRowTwo");
+	    doh.assertEqual([{one: "oneRowOne", two: "twoRowOne"}], batch);	
+		batch = parser.end();
+	    doh.assertEqual([{one: "oneRowTwo", two: "twoRowTwo"}], batch);	
+	  },
+
+
       {
         name: "thingerTest",
         setUp: function(){
