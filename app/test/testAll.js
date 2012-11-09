@@ -25,8 +25,8 @@ define(["doh/runner", "components/Utils", "components/CsvBatchParser"], function
 		var batch;
 		batch = parser.parse("first field, second field, \"third field\"");
         assertArrayLength(0, batch);
-		batch = parser.end();
-        assertArrayLength(0, batch);
+		var lastObj = parser.end();
+        doh.assertEqual(null, lastObj);
 		assertArrayLength(3, parser._fieldKeys);
 	    doh.assertEqual(["first field", "second field", "third field"], parser._fieldKeys);	
       },
@@ -51,7 +51,7 @@ define(["doh/runner", "components/Utils", "components/CsvBatchParser"], function
 	    doh.assertEqual([{one: "oneRowTwo", two: "twoRowTwo"}], batch);	
 	  },
 
-
+	//TODO tests for buildObject()
       {
         name: "thingerTest",
         setUp: function(){
