@@ -37,7 +37,7 @@ define(["doh/runner", "components/Utils", "components/CsvBatchParser"], function
 		batch = parser.parse("one, two\noneVal, twoVal");
         assertArrayLength(0, batch);
 		batch = parser.end();
-	    doh.assertEqual([{one: "oneVal", two: "twoVal"}], batch);	
+	    doh.assertEqual({one: "oneVal", two: "twoVal"}, batch);	
 	  },
 
 	  function testParseTwoRow() {
@@ -45,10 +45,10 @@ define(["doh/runner", "components/Utils", "components/CsvBatchParser"], function
 		var batch;
 		batch = parser.parse("one, two\noneRowOne, twoRowOne");
         assertArrayLength(0, batch);
-		batch = parser.parse("oneRowTwo, twoRowTwo");
+		batch = parser.parse("\noneRowTwo, twoRowTwo");
 	    doh.assertEqual([{one: "oneRowOne", two: "twoRowOne"}], batch);	
 		batch = parser.end();
-	    doh.assertEqual([{one: "oneRowTwo", two: "twoRowTwo"}], batch);	
+	    doh.assertEqual({one: "oneRowTwo", two: "twoRowTwo"}, batch);	
 	  },
 
 	//TODO tests for buildObject()

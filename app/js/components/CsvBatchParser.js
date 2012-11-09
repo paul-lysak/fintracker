@@ -1,8 +1,12 @@
-define(["dojo/_base/declare"],
-function(declare) {
-	var S_FIELD_START = 1;
-	var S_FIELD_QUOTED = 2;
-	var S_FIELD_UNQUOTED = 3;
+define(["dojo/_base/declare",
+	"dojo/_base/array"],
+function(declare, array) {
+	function unescapeQuotes(str) {
+		if(!str || str[0] != '"')
+			return str;
+		else 
+			return str.substr(1, str.length-2).replace('""', '"');
+	}
 
 	return declare("CsvBatchParser", [], {
 		constructor: function() {
@@ -18,41 +22,60 @@ function(declare) {
 			}
 			return ret;
 		},
-		
+
+		_remainderToKeys: function() {
+			this._fieldKeys = array.map(this._remainderParts, unescapeQuotes);
+			this._remainderParts = [];
+		},
+
 		parse: function(batch) {
+			var that = this;
+			function isSpace(c) {
+				return c == ' ' || c == '\t' || c == '\n' || c == '\r';
+			}
+			function pushCurrentToRemainder() {
+				that._remainderParts.push(batch.substring(firstNonSpace, lastNonSpace+1));
+				firstNonSpace = lastNonSpace = -1;
+			}
 			var ret = [];
 			batch = this._remainderText + batch;
-			var partStart = 0;
+			var firstNonSpace = -1;
+			var lastNonSpace = -1;
 			var prevQuote = false;
 			var inQuotes = false;
 			for(var i=0; i < batch.length; i++) {
 				if (batch[i] == '\n') {
-					if(this._fieldKeys.length > 0)
+					pushCurrentToRemainder();
+					if(this._fieldKeys.length > 0) 
 						ret.push(this.buildObject(this._remainderParts, this._fieldKeys));
 					else
-						this._fieldKeys = this._remainderParts;
+						this._remainderToKeys();
 					this._remainderParts = [];
-				}
-				else if (batch[i] == '"') {
+				} else if (batch[i] == '"') {
 					inQuotes = !inQuotes && !prevQuote; 
 					prevQuote = !prevQuote;
+					if(inQuotes)
+						firstNonSpace = lastNonSpace = i;
 				} else if (batch[i] == ',' && (!inQuotes || prevQuote)) { //TODO make separator configurable
-					this._remainderParts.push(batch.substring(partStart, i));
-					partStart = i+1;
+					pushCurrentToRemainder();
+					firstNonSpace = lastNonSpace = i+1
+				} else if(!isSpace(batch[i])) {
+					lastNonSpace = i;
+					if(firstNonSpace == -1 || isSpace(batch[firstNonSpace]))
+						firstNonSpace = i;
 				}
 			}
-			this._remainderText = batch.substring(partStart, batch.length);
+			this._remainderText = batch.substring(firstNonSpace, batch.length);
 			return ret; 
 		},
 
 		end: function() {
-			if(this._remainderText.length > 0) { //TODO trim
+			if(this._remainderText.length > 0) { 
 				this._remainderParts.push(this._remainderText);
 				this._remainderText = "";
 			}
 			if(this._fieldKeys.length == 0) {
-				this._fieldKeys = this._remainderParts;
-				this._remainderParts = [];
+				this._remainderToKeys();
 			}
 			return this._remainderParts.length > 0 
 				? this.buildObject(this._remainderParts, this._fieldKeys)
