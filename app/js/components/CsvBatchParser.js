@@ -5,7 +5,22 @@ function(declare, array) {
 		if(!str || str[0] != '"')
 			return str;
 		else 
-			return str.substr(1, str.length-2).replace('""', '"');
+			return str.substr(1, str.length-2).replace(/""/g, '"');
+	}
+
+	function typify(str) {
+		if(str.length == 0 ) 
+			return str;
+		else if(str[0] == '"')
+			return unescapeQuotes(str);
+		else if(str == "true" || str == "false")
+			return str == "true";
+		else if(str.match(/^\d+$/))
+			return parseInt(str, 10);
+		else if(str.match(/^\d+\.\d+$/)) //TODO make decimal separator configurable
+			return parseFloat(str, 10);
+		else 
+			return str;
 	}
 
 	return declare("CsvBatchParser", [], {
@@ -18,7 +33,7 @@ function(declare, array) {
 		buildObject : function(parts, keys) {
 			var ret = {};
 			for(var f=0; f<keys.length; f++) {
-				ret[keys[f]] = f < parts.length ? parts[f] : undefined; //TODO convert types, strip quotes, trim spaces
+				ret[keys[f]] = f < parts.length ? typify(parts[f]) : undefined; 
 			}
 			return ret;
 		},
@@ -56,7 +71,7 @@ function(declare, array) {
 					prevQuote = !prevQuote;
 					if(inQuotes)
 						firstNonSpace = lastNonSpace = i;
-				} else if (batch[i] == ',' && (!inQuotes || prevQuote)) { //TODO make separator configurable
+				} else if (batch[i] == ',' && (!inQuotes || prevQuote)) { //TODO make fields separator configurable
 					pushCurrentToRemainder();
 					firstNonSpace = lastNonSpace = i+1
 				} else if(!isSpace(batch[i])) {

@@ -51,17 +51,13 @@ define(["doh/runner", "components/Utils", "components/CsvBatchParser"], function
 	    doh.assertEqual({one: "oneRowTwo", two: "twoRowTwo"}, batch);	
 	  },
 
-	//TODO tests for buildObject()
-      {
-        name: "thingerTest",
-        setUp: function(){
-        },
-        runTest: function(){
-			doh.assertTrue(!false);
-        },
-        tearDown: function(){
-        }
-      },
+	  function testBuildObject() {
+	  	parser = new CsvBatchParser();
+		var actualObj = parser.buildObject(["true", "123", "123.45", "123hi all", '"hi ""all"""'], 
+		["boolType", "intType", "floatType", "strType", "strTypeQuoted"])
+		var expObj = {boolType: true, intType: 123, floatType: 123.45, strType: "123hi all", strTypeQuoted: 'hi "all"'}
+		doh.assertEqual(expObj, actualObj);
+	  }
     ]);
 
 });

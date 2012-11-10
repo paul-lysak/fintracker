@@ -1,6 +1,4 @@
-- Import from CSV
-	- design parser API
-	- write tests for CSV parsing
+- Imort from CSV
 	- design dialog-handler interaction
 	- read file by chunks
 	- convert to JSON
