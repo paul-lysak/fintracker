@@ -1,7 +1,5 @@
 - Imort from CSV
-	- design dialog-handler interaction
-	- read file by chunks
-	- convert to JSON
+	- close dialog on handling end
 	- upload to server
 	- handle ID conflict
 	- think about transactionality

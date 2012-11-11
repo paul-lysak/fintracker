@@ -67,10 +67,12 @@ function(declare, array) {
 						this._remainderToKeys();
 					this._remainderParts = [];
 				} else if (batch[i] == '"') {
+					if(inQuotes)
+						lastNonSpace = i;
+					else
+						firstNonSpace = i;
 					inQuotes = !inQuotes && !prevQuote; 
 					prevQuote = !prevQuote;
-					if(inQuotes)
-						firstNonSpace = lastNonSpace = i;
 				} else if (batch[i] == ',' && (!inQuotes || prevQuote)) { //TODO make fields separator configurable
 					pushCurrentToRemainder();
 					firstNonSpace = lastNonSpace = i+1
@@ -80,7 +82,7 @@ function(declare, array) {
 						firstNonSpace = i;
 				}
 			}
-			this._remainderText = batch.substring(firstNonSpace, batch.length);
+			this._remainderText = firstNonSpace < 0 ? "" : batch.substring(firstNonSpace, batch.length);
 			return ret; 
 		},
 
