@@ -2,24 +2,32 @@ define(["dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/on",
 	"dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", 
+	"dijit/ProgressBar",
 	"components/CsvBatchParser",
 	"dojo/text!./templates/ImportFileDialog.html",
 	"components/Utils",
 	],
-function(declare, array, on, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, CsvBatchParser, dialogTemplate, utils) {
+function(declare, array, on, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, ProgressBar, CsvBatchParser, dialogTemplate, utils) {
 	CsvImportSession = declare([], {
-		constructor: function() {
+		constructor: function(service) {
 			this._parser = new CsvBatchParser();
+			this._service = service;
 		},
 
 		importPart: function(part) {
 			var items = this._parser.parse(part);
-			console.log("got items", part, items);
+			array.forEach(items, function(item) {
+				console.log("got item", part, item);
+				this._service.insert(item);
+				//TODO insert preserving id and rev
+			}, this);
 		},
 
 		end: function() {
 			var item = this._parser.end();
 			console.log("got last item", item);
+			if(item) 
+				this._service.insert(item);
 		}
 	});
 
@@ -30,11 +38,14 @@ function(declare, array, on, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 		_chunkSize: 20,
 
 		_readFile: function(file) {
-			var importSession = new CsvImportSession();
+			var importSession = new CsvImportSession(this._service);
+			var def = new dojo.Deferred();
 			function readPart(startByte, endByte, chunkSize, fileSize) {
 				endByte = utils.min(endByte, fileSize);
 				if(startByte >= file.size) {
 					importSession.end();
+					def.resolve();
+					//TODO handle error
 				} else {
 					var reader = new FileReader();
 					var chunk = file.slice(startByte, endByte);
@@ -42,20 +53,27 @@ function(declare, array, on, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 					reader.onloadend = function(evt) {
 						if (evt.target.readyState == FileReader.DONE) {
 							importSession.importPart(evt.target.result);	
+							//TODO remove setTimeout after debug
 							readPart(startByte + chunkSize, endByte+chunkSize, chunkSize, fileSize);
 						}
 					}
+					def.progress({total: fileSize, processed: startByte});
 				}
 			}
 			readPart(0, this._chunkSize, this._chunkSize, file.size);
-			//TODO return promise
+			return def;
 		},
 
 		_handleImportStart: function(files) {
-			//TODO return promise
+			var defs = [];
 			for(var i = 0, file; file = files[i]; i++) {
-				this._readFile(file);
+				defs.push(this._readFile(file));
 			}
+			if(defs.length == 1)
+				return defs[0];
+				//TODO support progress for multiple files
+			else
+				return new dojo.DeferredList(defs);
 		},
 
 		postCreate: function() {
@@ -64,8 +82,21 @@ function(declare, array, on, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 				that.dialogDijit.hide();
 			});
 			this.okButton.on("click", function(ev) {
-				that._handleImportStart(that.fileInput.files);	
-				//TODO close dialog when import ends
+				that._handleImportStart(that.fileInput.files).then(
+					function() {
+						that.dialogDijit.hide();
+					},
+					function() {
+						alert("Failed to import data");
+						//TODO use toaster messages
+						that.dialogDijit.hide();
+					},
+					function(upd) {
+						console.log("upd=", upd);
+						that.progressBar.set("maximum", upd.total);
+						that.progressBar.set("value", upd.processed);
+					}
+					);
 			});
 		},
 
@@ -73,8 +104,8 @@ function(declare, array, on, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 			this.dialogDijit.show();	
 		},
 
-		setImportHandler: function(handler) {
-			this._importHandler = handler;
+		setExpensesService: function(service) {
+			this._service= service;
 		}
 	});
 

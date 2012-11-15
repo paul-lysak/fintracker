@@ -1,9 +1,3 @@
-- Imort from CSV
-	- close dialog on handling end
-	- upload to server
-	- handle ID conflict
-	- think about transactionality
-- Prevent default action for import/export
 - Provide name for exported files via headers
 - DB security
 - Configure DB location and store it in browser storage
@@ -17,6 +11,9 @@
 - Sort expenses on the client-side
 - Full keyboard support
 - Lazy initialization of UI parts
+- Improve imort from CSV
+	- support preserving IDs upon import
+	- think about transactionality
 
 Low priority:
 - Move CSV parser out to separate project

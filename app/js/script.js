@@ -24,7 +24,6 @@ require(["dojo/_base/lang",
 "components/CouchStoreService",
 "components/DateFilterDialog",
 "components/ImportFileDialog",
-"components/CsvExpensesImportHandler",
 "dojo/domReady!"],
 function(lang, on, topic, behavior, parser, ioQuery, winUtils, domStyle, domAttr) {
 dojo.parser.parse();
@@ -78,10 +77,10 @@ function initUI() {
 	ui.expensesDateFilterDialog.setLauncher(dojo.byId("expensesDateFilterLauncher"));
 	ui.expenseEditDialog = new ExpenseEditDialog(dijit.byId("editExpenseDialog"));
 	ui.importExpensesDialog = dijit.byId("importExpensesDialog");
-	ui.importExpensesDialog.setImportHandler(new components.CsvExpensesImportHandler());
-	//TODO set import handler
+	ui.importExpensesDialog.setExpensesService(expensesService);
 	on(dojo.byId("importCsv"), "click", function(ev) {
 		ui.importExpensesDialog.show();
+		ev.preventDefault();
 	});
 	initExport();
 }
