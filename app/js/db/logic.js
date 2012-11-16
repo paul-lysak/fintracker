@@ -34,7 +34,7 @@
 	},
 	"lists": {
 		"asCsv": "function(head, req) {"+
-				"start({headers: {'content-type': 'text/csv'}});"+
+				"start({headers: {'content-type': 'text/csv', 'content-disposition': 'attachment; filename=export.csv'}});"+
 				"var utils = require('utils');"+
 				"var outRows=[];"+
 				"var row=getRow();"+
