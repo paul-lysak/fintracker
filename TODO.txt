@@ -1,4 +1,3 @@
-- Provide name for exported files via headers
 - DB security
 - Configure DB location and store it in browser storage
 - organize import/export links in more usable way

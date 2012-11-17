@@ -3,7 +3,7 @@ define(["dojo/_base/declare",
 	"dojo/on",
 	"dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", 
 	"dijit/ProgressBar",
-	"components/CsvBatchParser",
+	"components/CsvStreamingParser",
 	"dojo/text!./templates/ImportFileDialog.html",
 	"components/Utils",
 	],
@@ -17,7 +17,6 @@ function(declare, array, on, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 		importPart: function(part) {
 			var items = this._parser.parse(part);
 			array.forEach(items, function(item) {
-				console.log("got item", part, item);
 				this._service.insert(item);
 				//TODO insert preserving id and rev
 			}, this);
@@ -25,7 +24,6 @@ function(declare, array, on, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 
 		end: function() {
 			var item = this._parser.end();
-			console.log("got last item", item);
 			if(item) 
 				this._service.insert(item);
 		}
@@ -92,7 +90,6 @@ function(declare, array, on, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 						that.dialogDijit.hide();
 					},
 					function(upd) {
-						console.log("upd=", upd);
 						that.progressBar.set("maximum", upd.total);
 						that.progressBar.set("value", upd.processed);
 					}

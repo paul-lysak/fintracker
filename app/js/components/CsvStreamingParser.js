@@ -1,6 +1,9 @@
-define(["dojo/_base/declare",
-	"dojo/_base/array"],
-function(declare, array) {
+//CsvStreamingParser - parser for CSV files which doesn't keep the whole file in memory
+//Copyright 2012 Paul Lysak (paul.lysak@gmail.com)
+//Licensed under Apache 2.0 license: http://www.apache.org/licenses/LICENSE-2.0.txt
+//
+define([],
+function() {
 	function unescapeQuotes(str) {
 		if(!str || str[0] != '"')
 			return str;
@@ -23,13 +26,13 @@ function(declare, array) {
 			return str;
 	}
 
-	return declare("CsvBatchParser", [], {
-		constructor: function() {
-			this._remainderText = "";
-			this._remainderParts = [];
-			this._fieldKeys = [];
-		},
+	function CsvStreamingParser() {
+		this._remainderText = "";
+		this._remainderParts = [];
+		this._fieldKeys = [];
+	}
 
+	CsvStreamingParser.prototype = {
 		buildObject : function(parts, keys) {
 			var ret = {};
 			for(var f=0; f<keys.length; f++) {
@@ -39,7 +42,10 @@ function(declare, array) {
 		},
 
 		_remainderToKeys: function() {
-			this._fieldKeys = array.map(this._remainderParts, unescapeQuotes);
+			this._fieldKeys = [];
+			for(var i=0; i < this._remainderParts.length; i++) {
+				this._fieldKeys[i] = unescapeQuotes(this._remainderParts[i]);
+			}
 			this._remainderParts = [];
 		},
 
@@ -98,5 +104,7 @@ function(declare, array) {
 				? this.buildObject(this._remainderParts, this._fieldKeys)
 				: null;
 		}
-	});
+	};
+	
+	return CsvStreamingParser;
 });
