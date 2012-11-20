@@ -24,6 +24,7 @@ require(["dojo/_base/lang",
 "components/CouchStoreService",
 "components/DateFilterDialog",
 "components/ImportFileDialog",
+"components/LoginController",
 "dojo/domReady!"],
 function(lang, on, topic, behavior, parser, ioQuery, winUtils, domStyle, domAttr) {
 dojo.parser.parse();
@@ -48,14 +49,15 @@ window.fintracker = fintracker = {
 }
 
 var utils = components.Utils;
-var dbInit = new components.DbInit(fintracker.settings);
+var loginController = new components.LoginController(fintracker.settings);
+var dbInit = new components.DbInit(fintracker.settings, loginController);
 
 dbInit.ensureDbExists().then(
 	function(succ) {
 		initUI();
 	},
 	function(err) {
-		alert("Failed to create DB", err);
+		alert("Failed to create or verify DB\n"+err);
 	});
 
 
@@ -172,8 +174,7 @@ function shortExpenseInfo(expenseItems, maxItems, maxDescr) {
 
 function RecentExpensesTable(element) {
 	dojo.removeClass(element, "hidden");
-	var couchStore = new dojox.data.CouchDBRestStore({
-		target: fintracker.getExpensesUrl()});
+	var couchStore = expensesService.createStore();
 	var query = "_design/logic/_view/byDate?"; 
 	var queryArgs = {};
  	var grid = dojox.grid.EnhancedGrid({store: couchStore,

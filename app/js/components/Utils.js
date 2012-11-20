@@ -19,6 +19,16 @@ Utils.min = function(a, b) {
 Utils.max = function(a, b) {
 		return a>b?a:b;
 	}
+	
+Utils.joinDef = function(inDef, outDef) {
+	inDef.then(function (arg) {
+			outDef.resolve(arg);
+		},
+		function (arg) {
+			outDef.reject(arg);
+		});
+}
+
 return Utils;
 });
 	

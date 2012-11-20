@@ -1,5 +1,6 @@
-define(["dojo/DeferredList"], function(DeferredList) {
-return components.DbInit = function(settings) {
+define(["dojo/DeferredList", "components/Utils"], 
+function(DeferredList, Utils) {
+return components.DbInit = function(settings, loginController) {
 this.ensureDbExists = function() {
 	var defExp = ensureStorageExists(settings.storage.expensesStore).then( 
 	function() {
@@ -8,7 +9,7 @@ this.ensureDbExists = function() {
 			"js/db/logic.js", "/_design/logic");
 		});
 	var defStat = ensureStorageExists(settings.storage.statusStore);
-	var defAll = new dojo.DeferredList([defExp, defStat]);
+	var defAll = new dojo.DeferredList([defExp, defStat], false, true);
 	return defAll;
 }
 
@@ -27,11 +28,18 @@ function ensureStorageExists(storageName) {
 			def.resolve(data);
 			},
 		error: function(error, ioargs) {
+			console.log("got error", error, ioargs);
 			if(ioargs.xhr.status == 404) {
 				createStorage(storageName).then(//TODO i beleive it can be simplified
 					function(succ) {def.resolve(succ);
 						dojo.publish("toasterMessageTopic", {message: "Storage created:"+storageName, type: "info", duration: 1000});},
 					function(err) {def.reject(err)});
+			} else if(ioargs.xhr.status == 401) {
+				console.log("not authenticated");
+				Utils.joinDef(loginController.logIn().then(
+					function() {
+							ensureStorageExists(storageName);
+						}), def);
 			} else {
 				def.reject(error);
 			}		

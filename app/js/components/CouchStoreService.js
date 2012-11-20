@@ -1,10 +1,16 @@
-define(["dojox/rpc/Rest"], 
-function(Rest) {
+define(["dojo/_base/declare",
+ "dojox/rpc/Rest"], 
+function(declare, Rest) {
 return components.CouchStoreService = function(backendSettings, storeName) {
 	var storeURL = backendSettings.storage.url+backendSettings.storage[storeName]+"/";
 
 	var restStore = Rest(storeURL, true);
 	
+	this.createStore = function() {
+		return dojox.data.CouchDBRestStore({
+			target: storeURL});
+	}
+
 	//returns deferred with promise containing uuid string
 	this.askUuid = function() {
 		var def = dojo.xhrGet({
@@ -56,5 +62,7 @@ return components.CouchStoreService = function(backendSettings, storeName) {
 				dojo.publish("update_"+storeName, obj);
 			});
 	}
+
+
 };
 });
