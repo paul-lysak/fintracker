@@ -1,12 +1,10 @@
-- DB security
-	- someone claims that anonymous users can write documents if not prohibited by validation doc. Need to investigate.
-- Configure DB location and store it in browser storage
-- organize import/export links in more usable way
 - Clean up installation/start scripts
 - Write installation manual
-- Status tracking
+- organize import/export links in more usable way
 - Optimize DB queries (e.g. avoid emiting documents)
+- Status tracking
 - Offline mode support
+- Configure DB location and store it in browser storage. This would need cross-domain scripting
 
 - Sort expenses on the client-side
 - Full keyboard support
@@ -16,10 +14,8 @@
 	- think about transactionality
 
 Low priority:
-- Move CSV parser out to separate project
 - Refactor DateFilterDialog: it should create a link and a dialog as a single component.
-- Refactor all dialogs - make sure they are inherited from Dialog
-- Scripts for preprocessing DB logic scripts that will allow to upload it without web-interface and write file as plain .js
-- Filter expenses by time
-	- Add ability to resize dialog
+- Refactor all dialogs - make sure they are inherited from Dialog, not aggregate dialog object inside of them.
+- Scripts for preprocessing DB logic that will allow to upload it without web-interface and write file as plain .js
+- Date filter dialog: add ability to resize dialog
 
