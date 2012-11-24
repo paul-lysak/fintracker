@@ -58,7 +58,8 @@ function(declare, array, lang, keys, on, focusUtil, WidgetBase, TemplatedMixin, 
 		logIn: function(loginFunction) {
 			this._loginFunction = loginFunction;
 			if(this._loginDeferred) {
-				this._loginDeferred.reject();
+				//for concurrent logins - let second request wait until first completes
+				return this._loginDeferred;
 			}
 			this._loginDeferred = new dojo.Deferred();
 			this.dialogDijit.show();	

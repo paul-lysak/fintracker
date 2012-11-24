@@ -13,12 +13,26 @@ this.ensureDbExists = function() {
 	return defAll;
 }
 
+function loginAndRetry(def, fun) {
+	Utils.joinDef(loginController.logIn().then(fun), def);
+}
+
 function ensureStorageExists(storageName) {
 	var def = new dojo.Deferred();
 	function createStorage(storageName) {
-		return dojo.xhrPut({
-		url: settings.storage.url+storageName
+		var def = new dojo.Deferred();
+		dojo.xhrPut({
+			url: settings.storage.url+storageName,
+			load: function() {
+				def.resolve();
+			},
+			error: function(error, ioargs) {
+				//TODO I guess authentication concerns could be generalized...
+				if(ioargs.xhr.status == 401) 
+					loginAndRetry(def, function() {return createStorage(storageName);});
+			}
 		});
+		return def;
 	}
 
 	dojo.xhrGet({
@@ -35,11 +49,7 @@ function ensureStorageExists(storageName) {
 						dojo.publish("toasterMessageTopic", {message: "Storage created:"+storageName, type: "info", duration: 1000});},
 					function(err) {def.reject(err)});
 			} else if(ioargs.xhr.status == 401) {
-				console.log("not authenticated");
-				Utils.joinDef(loginController.logIn().then(
-					function() {
-							ensureStorageExists(storageName);
-						}), def);
+				loginAndRetry(def, function() {return ensureStorageExists(storageName)});
 			} else {
 				def.reject(error);
 			}		
@@ -64,13 +74,25 @@ function uploadDocFromFile(dbName, fileName, docId) {
 		url: fileName
 	}).then(function(content) { 
 		var jsTail = ".js";
-		if(fileName.substr(-jsTail.length) == jsTail) {//TODO extract function
+		if(fileName.substr(-jsTail.length) == jsTail) {
 			content = dojo.toJson(dojo.fromJson(content));
 		}
-		return dojo.xhrPut({
+		var def = new dojo.Deferred();
+		dojo.xhrPut({
 			url: settings.storage.url+dbName+docId,
-			putData: content
+			putData: content,
+			load: function() {
+				def.resolve();
+			},
+			error: function(error, ioargs) {
+				if(ioargs.xhr.status == 401) {
+					loginAndRetry(def, function() {return uploadDocFromFile(dbName, fileName, docId);});
+				} else {
+					def.reject(error);
+				}	
+			}
 		});
+		return def;
 	});
 }
 

@@ -1,8 +1,4 @@
 - DB security
-	- auto-resend credentials by timer
-	- check DB creation
-	- keep credentials between connections
-	- cipher stored credentials with cookie
 	- someone claims that anonymous users can write documents if not prohibited by validation doc. Need to investigate.
 - Configure DB location and store it in browser storage
 - organize import/export links in more usable way
