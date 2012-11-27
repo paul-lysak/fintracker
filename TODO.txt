@@ -1,4 +1,9 @@
-- Clean up installation/start scripts
+- Clean up environment and scripts
+	- move tests out of production. Create script for starting python test server
+	- make sure all URLs except CouchDB are relative - to support different context path
+	- find out if it's possible to use python HTTP server for proxying - thus we could get rid of nginx for development
+	- write single script which starts dev. servers under regular user
+	- shutdown script for development environment
 - Write installation manual
 - organize import/export links in more usable way
 - Optimize DB queries (e.g. avoid emiting documents)

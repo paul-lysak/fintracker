@@ -1,4 +1,6 @@
-require(["dojo/_base/lang",
+require([
+"config/FintrackerConfig",
+"dojo/_base/lang",
 "dojo/on",
 "dojo/topic",
 "dojo/behavior",
@@ -26,27 +28,14 @@ require(["dojo/_base/lang",
 "components/ImportFileDialog",
 "components/LoginController",
 "dojo/domReady!"],
-function(lang, on, topic, behavior, parser, ioQuery, winUtils, domStyle, domAttr) {
+function(fintrackerConfig, lang, on, topic, behavior, parser, ioQuery, winUtils, domStyle, domAttr) {
 dojo.parser.parse();
 
-window.fintracker = fintracker = {
-	settings: {
-		storage: {type: "couchdb",
-		url: "http://localhost:7070/couchdb/", //TODO avoid hardcoding DB address
-		expensesStore: "fintracker_expenses",
-		statusStore: "fintracker_status"
-		}
-	},
+window.fintracker = fintracker = lang.delegate(fintrackerConfig, {
 	getExpensesUrl: function() {
 		return this.settings.storage.url+this.settings.storage.expensesStore+"/";
-	},
-	categories: {
-		other: "Uncategorized",
-		food: "Food and drink",
-		car: "Car (fuel, repair, etc.)",
-		household: "Household (payments, repairs, etc.)",
 	}
-}
+});
 
 var utils = components.Utils;
 var loginController = new components.LoginController(fintracker.settings);
