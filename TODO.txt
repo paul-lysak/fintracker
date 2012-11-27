@@ -1,4 +1,5 @@
 - Clean up environment and scripts
+	- separate config into parts. Allow separate parts to be overriden
 	- make sure all URLs except CouchDB are relative - to support different context path
 	- find out if it's possible to use python HTTP server for proxying - thus we could get rid of nginx for development
 	- write single script which starts dev. servers under regular user
