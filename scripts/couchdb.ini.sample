@@ -1,0 +1,7 @@
+[couchdb]
+database_dir = ./couchdb_data
+view_index_dir = ./couchdb_data
+uri_file = ./couchdb_data/couch.uri
+
+[log]
+file = ./couchdb_data/couch.log

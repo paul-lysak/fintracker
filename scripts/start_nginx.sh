@@ -1,5 +1,3 @@
 #!/bin/sh
-mkdir /tmp/nginx_tmp
-mkdir /tmp/nginx_tmp/log
 nginx -c scripts/nginx.conf -p ~/develop/myprojects/fintracker/
 

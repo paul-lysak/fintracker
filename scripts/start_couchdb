@@ -1,7 +1,0 @@
-#!/bin/sh
-couch_log_dir=/usr/local/var/log/couchdb
-rm -r ${couch_log_dir} 
-mkdir ${couch_log_dir}
-chown couchdb ${couch_log_dir}
-chgrp couchdb ${couch_log_dir}
-sudo -i -u couchdb couchdb

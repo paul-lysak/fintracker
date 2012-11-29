@@ -12,13 +12,9 @@ case "$old_design" in
 	echo "old_design=$old_design"
 	;;
 	*) 
-	rev=$(echo $old_design | sed 's/.\+"_rev":"\([0-9a-z\-]\+\)".\+/\1/');
+	rev=$(echo $old_design | sed -n 's/.\+"_rev":"\([0-9a-z\-]\+\)".*/\1/pg');
 	echo removing _design/logic document with rev=$rev...
-	curl -s -X DELETE $EXP_DESIGN_URI?rev=$rev
+	curl -X DELETE $EXP_DESIGN_URI?rev=$rev
 	;;
 esac
-#TODO find command-line utility to convert js to json
-#echo uploading _design/logic document...
-#curl -T../app/js/db/logic.json $EXP_DESIGN_URI
-#echo design doc update complete
 

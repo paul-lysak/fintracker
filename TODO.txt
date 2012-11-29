@@ -1,8 +1,4 @@
 - Clean up environment and scripts
-	- find out if it's possible to use python HTTP server for proxying - thus we could get rid of nginx for development
-	- write single script which starts dev. servers (web and DB) under regular user
-	- shutdown script for development environment
-	- refine DB development script
 	- switch between development and production databases
 	- production config for nginx
 - Write installation manual

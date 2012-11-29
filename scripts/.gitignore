@@ -1,0 +1,4 @@
+nginx.conf
+couchdb.ini
+couchdb_data/*
+*.dump
