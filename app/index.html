@@ -12,17 +12,25 @@
 				async: true, 
 				isDebug: true ,
 				uncompressed: true,
-				packages: [{
+				baseUrl: ".",
+				packages: [ {
+					name: "dojo",
+					location: "js/lib/dojo-release-1.8.1/dojo" 
+				}, {
+					name: "dojox",
+					location: "js/lib/dojo-release-1.8.1/dojox" 
+				}, {
+					name: "dijit",
+					location: "js/lib/dojo-release-1.8.1/dijit" 
+				}, {
 					name: "components",
-					location: "/js/components" 
-				},
-				{
+					location: "js/components" 
+				}, {
 					name: "config",
-					location: "/config"
-				}, 
-				{
+					location: "config"
+				}, {
 					name: "config_default",
-					location: "/config_default"
+					location: "config_default"
 				}]
 			};
 	</script>
