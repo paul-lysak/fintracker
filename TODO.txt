@@ -1,6 +1,5 @@
 - Clean up environment and scripts
-	- switch between development and production databases
-	- production config for nginx
+	- Set up nginx and couchdb autostart on production
 - Write installation manual
 - organize import/export links in more usable way
 - Optimize DB queries (e.g. avoid emiting documents)

@@ -1,7 +1,7 @@
 define([], {
 	settings: {
 		storage: {type: "couchdb",
-		url: "http://localhost:7070/couchdb/", 
+		url: "/couchdb/", 
 		expensesStore: "fintracker_expenses",
 		statusStore: "fintracker_status"
 		}

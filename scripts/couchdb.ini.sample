@@ -3,5 +3,9 @@ database_dir = ./couchdb_data
 view_index_dir = ./couchdb_data
 uri_file = ./couchdb_data/couch.uri
 
+[httpd]
+port = 7000 
+bind_address = 127.0.0.1
+
 [log]
 file = ./couchdb_data/couch.log

@@ -27,7 +27,7 @@ http {
 
 		location /couchdb {
 		    rewrite /couchdb/(.*) /$1 break;
-			proxy_pass http://localhost:5984; #specify your development CouchDB URL here
+			proxy_pass http://localhost:7000; #specify your development CouchDB URL here
 		    proxy_redirect off;
 		    proxy_set_header Host $host;
     		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
