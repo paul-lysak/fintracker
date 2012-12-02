@@ -1,6 +1,4 @@
-- Clean up environment and scripts
-	- Set up nginx and couchdb autostart on production
-- Write installation manual
+- logout ability
 - organize import/export links in more usable way
 - Optimize DB queries (e.g. avoid emiting documents)
 - Status tracking
