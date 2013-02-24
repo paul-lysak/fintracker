@@ -1,9 +1,16 @@
+- design UI layout
+	- extract common functionality for different tabs
+	- organize import/export links in more usable way
+	- dynamically load tab content
+	- style fine tuning
 - logout ability
 - organize import/export links in more usable way
 - Optimize DB queries (e.g. avoid emiting documents)
 - Status tracking
 - Offline mode support
 - Configure DB location and store it in browser storage. This would need cross-domain scripting
+
+- development environment scripts currently need manual creation of temporary directories for nginx
 
 - Sort expenses on the client-side
 - Full keyboard support

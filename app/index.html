@@ -40,12 +40,32 @@
   </script>
 </head>
 <body class="claro">
-<div class="title">FinTracker</div>
+
+<div class="appLayout"
+		data-dojo-type="dijit/layout/BorderContainer"
+		data-dojo-props="design: 'headline'">
+	<div class="edgePanel"
+		data-dojo-type="dijit/layout/ContentPane"
+		data-dojo-props="region: 'top'">
+			<div class="title">FinTracker</div>
+		</div>
+
+	<div class="centerPanel"
+			data-dojo-type="dijit/layout/ContentPane"
+			data-dojo-props="region: 'center'">
+		<div class="centerPanel"
+				data-dojo-type="dijit/layout/TabContainer"
+				data-dojo-props="tabPosition: 'top'">
+			<div data-dojo-type="dijit/layout/ContentPane"
+					data-dojo-props="title: 'Expenses'">
+
+
 <div id="createExpenseArea" class="hidden createExpenseArea">
 Enter expense:<br/>
 <div class="createExpenseForm" data-dojo-type="components.ExpenseForm"></div>
 <input type="button" value="Ok" name="ok"/>
 </div>
+<br/>
 
 Date filter: <a id="expensesDateFilterLauncher" href="#">none</a><br/>
 
@@ -58,25 +78,38 @@ Export to CSV:
 <div id="recentExpenses" class="expensesList hidden">
 </div>
 
-
-<div id="dateFilterDialog" data-dojo-type="components.DateFilterDialog"></div>
-<div id="importExpensesDialog" data-dojo-type="components.ImportFileDialog"></div>
-
 <div data-dojo-type="dijit.Dialog" id="editExpenseDialog" title="Edit Expense" style="display: none">
 	<div class="editExpenseForm" data-dojo-type="components.ExpenseForm"></div>
 	<button data-dojo-type="dijit.form.Button" type="button" name="ok">OK</button>
 	<button data-dojo-type="dijit.form.Button" type="button" name="cancel">Cancel</button>
 </div>
 
-<div data-dojo-type="dojox.widget.Toaster"
-     data-dojo-props="positionDirection:'br-left', duration:0, messageTopic:'toasterMessageTopic'"
-     id="publish_subscribe_toaster"
-     >
-</div>
+<div id="dateFilterDialog" data-dojo-type="components.DateFilterDialog"></div>
+<div id="importExpensesDialog" data-dojo-type="components.ImportFileDialog"></div>
 
 <div data-dojo-type="dijit.Menu" id="expenseItemMenu" data-dojo-props="" style="display: none;">
     <div data-dojo-type="dijit.MenuItem" class="edit">Edit</div>
     <div data-dojo-type="dijit.MenuItem" class="delete">Delete</div>
+</div>
+
+
+			</div>
+			<div data-dojo-type="dijit/layout/ContentPane"
+					data-dojo-props="title: 'Income'">
+					TODO
+			</div>
+			<div data-dojo-type="dijit/layout/ContentPane"
+					data-dojo-props="title: 'Balance'">
+					TODO
+			</div>
+		</div>
+	</div>
+</div>
+
+<div data-dojo-type="dojox.widget.Toaster"
+     data-dojo-props="positionDirection:'br-left', duration:0, messageTopic:'toasterMessageTopic'"
+     id="publish_subscribe_toaster"
+     >
 </div>
 
 </body>
