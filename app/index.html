@@ -53,13 +53,13 @@
 	<div class="centerPanel"
 			data-dojo-type="dijit/layout/ContentPane"
 			data-dojo-props="region: 'center'">
-		<div class="centerPanel"
+		<div id="appSectionsPanel" class="centerPanel"
 				data-dojo-type="dijit/layout/TabContainer"
 				data-dojo-props="tabPosition: 'top'">
-			<div data-dojo-type="dijit/layout/ContentPane"
+			<div id="expensesSectionTab" data-dojo-type="dijit/layout/ContentPane"
 					data-dojo-props="title: 'Expenses'">
-
-
+				Loading...
+<!--
 <div id="createExpenseArea" class="hidden createExpenseArea">
 Enter expense:<br/>
 <div class="createExpenseForm" data-dojo-type="components.ExpenseForm"></div>
@@ -91,14 +91,14 @@ Export to CSV:
     <div data-dojo-type="dijit.MenuItem" class="edit">Edit</div>
     <div data-dojo-type="dijit.MenuItem" class="delete">Delete</div>
 </div>
-
+-->
 
 			</div>
-			<div data-dojo-type="dijit/layout/ContentPane"
+			<div id="incomeSectionTab" data-dojo-type="dijit/layout/ContentPane"
 					data-dojo-props="title: 'Income'">
 					TODO
 			</div>
-			<div data-dojo-type="dijit/layout/ContentPane"
+			<div id="balanceSectionTab" data-dojo-type="dijit/layout/ContentPane"
 					data-dojo-props="title: 'Balance'">
 					TODO
 			</div>

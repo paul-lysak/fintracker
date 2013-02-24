@@ -1,7 +1,11 @@
+- fix after refactoring:
+ - context menu in the table
 - design UI layout
+	- dynamically load tab content
+	  - load module
+	  - construct UI
 	- extract common functionality for different tabs
 	- organize import/export links in more usable way
-	- dynamically load tab content
 	- style fine tuning
 - logout ability
 - organize import/export links in more usable way

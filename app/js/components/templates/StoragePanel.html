@@ -1,0 +1,35 @@
+<div data-dojo-attach-point="containerNode">
+
+	<div data-dojo-attach-point="createExpenseArea" class="hidden createExpenseArea">
+		Enter expense:<br/>
+		<div class="createExpenseForm" data-dojo-type="components.ExpenseForm"></div>
+		<input type="button" value="Ok" name="ok"/>
+	</div>
+	<br/>
+
+	Date filter: <a data-dojo-attach-point="expensesDateFilterLauncher" href="#">none</a><br/>
+
+	Export to CSV:
+	[<a href="#" data-dojo-attach-point="exportCsvAll" target="_blank">all</a> |
+	<a href="#" data-dojo-attach-point="exportCsvFiltered" target="_blank">filtered</a>]
+	<br/>
+	<a href="#" data-dojo-attach-point="importCsv">Import from CSV</a> 
+
+	<div data-dojo-attach-point="recentExpenses" class="expensesList hidden">
+	</div>
+
+	<div data-dojo-type="dijit.Dialog" data-dojo-attach-point="editExpenseDialog" title="Edit Expense" style="display: none">
+		<div class="editExpenseForm" data-dojo-type="components.ExpenseForm"></div>
+		<button data-dojo-type="dijit.form.Button" type="button" name="ok">OK</button>
+		<button data-dojo-type="dijit.form.Button" type="button" name="cancel">Cancel</button>
+	</div>
+
+	<div data-dojo-attach-point="dateFilterDialog" data-dojo-type="components.DateFilterDialog"></div>
+	<div data-dojo-attach-point="importExpensesDialog" data-dojo-type="components.ImportFileDialog"></div>
+
+	<div data-dojo-type="dijit.Menu" data-dojo-attach-point="expenseItemMenu" data-dojo-props="" style="display: none;">
+		<div data-dojo-type="dijit.MenuItem" data-dojo-attach-point="expenseItemEdit" class="edit">Edit</div>
+		<div data-dojo-type="dijit.MenuItem" data-dojo-attach-point="expenseItemDelete" class="delete">Delete</div>
+	</div>
+
+</div>
