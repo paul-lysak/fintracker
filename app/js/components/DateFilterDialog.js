@@ -3,11 +3,12 @@ define(["dojo/_base/declare",
 "dojo/topic",
 "dojo/window",
 "dojo/dom-style",
+"dojo/Evented",
 "components/Utils",
 "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", 
 "dojo/text!./templates/DateFilterDialog.html" 
 ], 
-function(declare, on, topic, winUtils, domStyle, utils, 
+function(declare, on, topic, winUtils, domStyle, Evented, utils, 
 WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, dialogTemplate ) {
 	function generateMonthTree(yearsCount) {
 		var dates = [];
@@ -31,7 +32,7 @@ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, dialogTemplate ) {
 
 var launcher = null;
 
-return declare("components.DateFilterDialog", [WidgetBase, TemplatedMixin, WidgetsInTemplateMixin], {
+return declare("components.DateFilterDialog", [WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented], {
 	templateString: dialogTemplate,
 
 	postCreate: function() {
@@ -73,8 +74,7 @@ return declare("components.DateFilterDialog", [WidgetBase, TemplatedMixin, Widge
 			} else {
 				launcher.innerHTML = "from "+fromMonth+" to "+toMonth;
 			}
-			//TODO configurable topic id
-			dojo.publish("expensesDateFilter", {"fromMonth": fromMonth, "toMonth": toMonth}); 
+			on.emit(that, "ft:filterChange", {"fromMonth": fromMonth, "toMonth": toMonth});
 		});
 	},
 

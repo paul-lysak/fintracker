@@ -1,16 +1,18 @@
-- fix after refactoring:
- - context menu in the table
+- refactor tabs code
+	- eliminate reference to "expenses" where possible
+	- subclass tab content
+		- create subclass
+		- move concrete DB interaction to subclass
+		- move form definition to subclass
+		- move table columns definition to subclass
 - design UI layout
-	- dynamically load tab content
-	  - load module
-	  - construct UI
-	- extract common functionality for different tabs
 	- organize import/export links in more usable way
 	- style fine tuning
+	- organize import/export links in more usable way
 - logout ability
-- organize import/export links in more usable way
 - Optimize DB queries (e.g. avoid emiting documents)
 - Status tracking
+- Income tracking
 - Offline mode support
 - Configure DB location and store it in browser storage. This would need cross-domain scripting
 

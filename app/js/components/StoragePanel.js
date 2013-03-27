@@ -1,4 +1,5 @@
 define(["dojo/_base/declare", "dojo/_base/lang", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", 
+	"dojo/Evented",
     "dojo/text!./templates/StoragePanel.html", "dojo/_base/lang",
 	"dojo/on",
 	"dojo/dom-attr",
@@ -7,7 +8,9 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dijit/_WidgetBase", "dijit/_Te
 	"components/DateFilterDialog",
 	"components/ImportFileDialog"
 	],
-function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, lang, on, domAttr, ioQuery, 
+function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, 
+		Evented,
+		template, lang, on, domAttr, ioQuery, 
 		utils, 
 		DateFilterDialog, 
 		ImportFileDialog){
@@ -16,7 +19,7 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, temp
 		var allQuery = "_design/logic/_list/asCsv/byDate?"; 
 		domAttr.set(that.exportCsvAll, "href", fintracker.getExpensesUrl()+allQuery);
 		domAttr.set(that.exportCsvFiltered, "href", fintracker.getExpensesUrl()+allQuery);
-		dojo.subscribe("expensesDateFilter", function(filter) {
+		on(that, "ft:filterChange", function(filter) {
 			var args = {startkey: '"'+filter.fromMonth+'-01"', 
 					endkey: '"'+filter.toMonth+'-31"'};
 			domAttr.set(that.exportCsvFiltered, "href", fintracker.getExpensesUrl()+allQuery+dojo.objectToQuery(args));
@@ -79,9 +82,11 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, temp
 	function initUI(that, ui) {
 		ui.createExpenseArea = new ExpensesEntryArea(that._expensesService, that.createExpenseArea);
 		ui.recentExpenses = new RecentExpensesTable(that, ui, that._expensesService.createStore(), that.recentExpenses);
-//		ui.expensesDateFilterDialog = dijit.byId("dateFilterDialog");
 		ui.expensesDateFilterDialog = new DateFilterDialog();
 		ui.expensesDateFilterDialog.setLauncher(that.expensesDateFilterLauncher);
+		ui.expensesDateFilterDialog.on("ft:filterChange", function(filter) {
+			that.emit("ft:filterChange", filter);
+		});
 		ui.expenseEditDialog = new ExpenseEditDialog(that._expensesService, that.editExpenseDialog);
 		ui.importExpensesDialog = that.importExpensesDialog;
 		ui.importExpensesDialog.setExpensesService(that._expensesService);
@@ -133,7 +138,6 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, temp
 				{name: "Category", field: "category"},
 				{name: "Comment", field: "comment"},
 				],
-//				plugins: {menus: {rowMenu: "expenseItemMenu"}}
 				plugins: {menus: {rowMenu: that.expenseItemMenu}}
 				},
 		element);
@@ -145,7 +149,7 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, temp
 		dojo.subscribe("remove_expensesStore", refreshGrid);
 		dojo.subscribe("update_expensesStore", refreshGrid);
 
-		dojo.subscribe("expensesDateFilter", function(filter) {
+		on(that, "ft:filterChange", function(filter) {
 			queryArgs.startkey = "\""+filter.fromMonth+"-01\"";
 			queryArgs.endkey = "\""+filter.toMonth+"-31\"";
 			var fullQuery = query + ioQuery.objectToQuery(queryArgs);
@@ -203,7 +207,7 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, temp
 
 
 
-	return declare("components.StoragePanel", [WidgetBase, TemplatedMixin, WidgetsInTemplateMixin], {
+	return declare("components.StoragePanel", [WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Evented], {
 		templateString: template,
 
 		_ui: {},
