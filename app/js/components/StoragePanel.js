@@ -29,7 +29,7 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 
 	function ExpensesEntryArea(expensesService, element) {
 		dojo.removeClass(element, "hidden");
-		var form = utils.getSubWidget(element, ".createExpenseForm");
+		var form = utils.getSubWidget(element, ".itemForm");
 		form.set("categoriesMap", fintracker.categories);
 		form.expDate.set("value", new Date());
 		dojo.query("[name=ok]", element).connect("click", 
@@ -52,16 +52,16 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 
 
 	function ExpenseEditDialog(expensesService, dialogDijit) {
-		var expenseForm = utils.getSubWidget(dialogDijit, "form.expenseForm");
-		expenseForm.set("categoriesMap", fintracker.categories);
+		var itemForm = utils.getSubWidget(dialogDijit, "form.itemForm");
+		itemForm.set("categoriesMap", fintracker.categories);
 		var okButton = utils.getSubWidget(dialogDijit, "[name='ok']");
 		var cancelButton = utils.getSubWidget(dialogDijit, "[name='cancel']");
 		okButton.on("click", function() {
-			if(!expenseForm.isValid()) {
+			if(!itemForm.isValid()) {
 					displayError("Please enter valid data");
 					return;
 				}
-			var updatedExpense = expenseForm.get("expense"); 
+			var updatedExpense = itemForm.get("expense"); 
 			expensesService.update(updatedExpense).then(
 				function() {displayInfo("Expense updated");}, 
 				function() {displayError("Failed to update expense.");});
@@ -72,14 +72,15 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 			dialogDijit.hide();
 			});
 
-		this.edit = function(expense) {
-			expenseForm.set("expense", expense);
-			expenseForm.set("somestuff", expense);
+		this.edit = function(formItem) {
+			itemForm.set("expense", formItem);
+			itemForm.set("somestuff", formItem);
 			dialogDijit.show();
 		}
 	}
 
 	function initUI(that, ui) {
+		(new that._ItemFormComponent()).placeAt(that.createItemForm);
 		ui.createExpenseArea = new ExpensesEntryArea(that._expensesService, that.createExpenseArea);
 		ui.recentExpenses = new RecentExpensesTable(that, ui, that._expensesService.createStore(), that.recentExpenses);
 		ui.expensesDateFilterDialog = new DateFilterDialog();
@@ -214,11 +215,13 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 
 		_settings: {},
 
+		_expensesService: null, //to be defined in subclass
+
+		_ItemFormComponent: null, //to be defined in subclass
+
 		constructor: function(settings) {
 			var that = this;
 			this._settings = settings;
-
-			this._expensesService = new components.CouchStoreService(settings, "expensesStore");
 		}, //end constructor
 
 		postCreate: function() {

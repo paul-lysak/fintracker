@@ -24,7 +24,6 @@ require([
 "dojox/grid/enhanced/plugins/Menu",
 "dojox/widget/Toaster",
 "components/Utils",
-"components/ExpenseForm",
 "components/DbInit",
 "components/CouchStoreService",
 "components/LoginController",
@@ -71,9 +70,7 @@ function initTabsContent() {
 		loadTab(toTab);
 	});
 	function loadTab(tab) {
-		console.log("load", tab);	
 		require([tab.ftTabModule], function(TabModule) {
-			console.log("loaded", TabModule);	
 			var tabContentWidget = new TabModule(fintracker.settings); 
 			tab.set("content", tabContentWidget);
 		})

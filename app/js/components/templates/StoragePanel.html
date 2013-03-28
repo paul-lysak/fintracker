@@ -2,7 +2,8 @@
 
 	<div data-dojo-attach-point="createExpenseArea" class="hidden createExpenseArea">
 		Enter expense:<br/>
-		<div class="createExpenseForm" data-dojo-type="components.ExpenseForm"></div>
+		<!-- div class="createExpenseForm" data-dojo-type="components.ExpenseForm"></div -->
+		<div class="createExpenseForm" data-dojo-attach-point="createItemForm"></div>
 		<input type="button" value="Ok" name="ok"/>
 	</div>
 	<br/>
