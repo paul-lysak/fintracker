@@ -1,7 +1,6 @@
 - refactor tabs code
-	- eliminate reference to "expenses" where possible
 	- subclass tab content
-		- create subclass
+		- eliminate reference to "expenses" where possible
 		- move concrete DB interaction to subclass
 		- move form definition to subclass
 		- move table columns definition to subclass

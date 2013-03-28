@@ -212,6 +212,8 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 
 		_ui: {},
 
+		_settings: {},
+
 		constructor: function(settings) {
 			var that = this;
 			this._settings = settings;

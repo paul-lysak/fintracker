@@ -72,7 +72,7 @@ function initTabsContent() {
 	});
 	function loadTab(tab) {
 		console.log("load", tab);	
-		require(["components/StoragePanel"], function(TabModule) {
+		require([tab.ftTabModule], function(TabModule) {
 			console.log("loaded", TabModule);	
 			var tabContentWidget = new TabModule(fintracker.settings); 
 			tab.set("content", tabContentWidget);
