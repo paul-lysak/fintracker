@@ -15,7 +15,7 @@ function(declare,
 		//TODO move here all expenses-specific code from StoragePanel
 
 		constructor: function(settings) {
-			this._expensesService = new components.CouchStoreService(settings, "expensesStore");
+			this._storageService = new components.CouchStoreService(settings, "expensesStore");
 
 			this._ItemFormComponent = ExpenseForm;
 		}, //end constructor

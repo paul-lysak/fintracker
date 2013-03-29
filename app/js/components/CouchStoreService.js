@@ -2,13 +2,13 @@ define(["dojo/_base/declare",
  "dojox/rpc/Rest"], 
 function(declare, Rest) {
 return components.CouchStoreService = function(backendSettings, storeName) {
-	var storeURL = backendSettings.storage.url+backendSettings.storage[storeName]+"/";
+	this.storeURL = backendSettings.storage.url+backendSettings.storage[storeName]+"/";
 
-	var restStore = Rest(storeURL, true);
-	
+	var restStore = Rest(this.storeURL, true);
+
 	this.createStore = function() {
 		return dojox.data.CouchDBRestStore({
-			target: storeURL});
+			target: this.storeURL});
 	}
 
 	//returns deferred with promise containing uuid string

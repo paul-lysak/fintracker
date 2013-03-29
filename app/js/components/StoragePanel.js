@@ -17,43 +17,41 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 
 	function initExport(that) {
 		var allQuery = "_design/logic/_list/asCsv/byDate?"; 
-		domAttr.set(that.exportCsvAll, "href", fintracker.getExpensesUrl()+allQuery);
+		var storeUrl = that._storageService.storeURL;
+		domAttr.set(that.exportCsvAll, "href", storeUrl+allQuery);
 		domAttr.set(that.exportCsvFiltered, "href", fintracker.getExpensesUrl()+allQuery);
 		on(that, "ft:filterChange", function(filter) {
 			var args = {startkey: '"'+filter.fromMonth+'-01"', 
 					endkey: '"'+filter.toMonth+'-31"'};
-			domAttr.set(that.exportCsvFiltered, "href", fintracker.getExpensesUrl()+allQuery+dojo.objectToQuery(args));
+			domAttr.set(that.exportCsvFiltered, "href", storeUrl+allQuery+dojo.objectToQuery(args));
 		});
 
 	}
 
-	function ExpensesEntryArea(expensesService, element) {
+	function ItemEntryArea(storageService, element) {
 		dojo.removeClass(element, "hidden");
 		var form = utils.getSubWidget(element, ".itemForm");
-		form.set("categoriesMap", fintracker.categories);
-		form.expDate.set("value", new Date());
+		form.initInput();
 		dojo.query("[name=ok]", element).connect("click", 
 			function(){
 				if(!form.validate()) {
 					displayError("Please enter valid data");
 					return;
 				}
-				var expense = form.get("expense"); 
-				expensesService.insert(expense).then(function(res) {
+				var item = form.get("item"); 
+				storageService.insert(item).then(function(res) {
 					//reset all fields except of date
-					form.amount.reset();
-					form.category.reset();
-					form.comment.reset();
-					displayInfo("Expense added");
-				}, function() {displayError("Failed to add expense.");});
+					form.clearAfterInput();
+					displayInfo("Item added");
+				}, function() {displayError("Failed to add item");});
 			});
 	}
 
 
 
-	function ExpenseEditDialog(expensesService, dialogDijit) {
+	function ItemEditDialog(storageService, dialogDijit) {
 		var itemForm = utils.getSubWidget(dialogDijit, "form.itemForm");
-		itemForm.set("categoriesMap", fintracker.categories);
+		itemForm.initInput();
 		var okButton = utils.getSubWidget(dialogDijit, "[name='ok']");
 		var cancelButton = utils.getSubWidget(dialogDijit, "[name='cancel']");
 		okButton.on("click", function() {
@@ -61,10 +59,10 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 					displayError("Please enter valid data");
 					return;
 				}
-			var updatedExpense = itemForm.get("expense"); 
-			expensesService.update(updatedExpense).then(
-				function() {displayInfo("Expense updated");}, 
-				function() {displayError("Failed to update expense.");});
+			var updatedItem = itemForm.get("item"); 
+			storageService.update(updatedItem).then(
+				function() {displayInfo("Item updated");}, 
+				function() {displayError("Failed to update item");});
 			dialogDijit.hide();
 			});
 		cancelButton.on("click", function() {
@@ -73,24 +71,23 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 			});
 
 		this.edit = function(formItem) {
-			itemForm.set("expense", formItem);
-			itemForm.set("somestuff", formItem);
+			itemForm.set("item", formItem);
 			dialogDijit.show();
 		}
 	}
 
 	function initUI(that, ui) {
 		(new that._ItemFormComponent()).placeAt(that.createItemForm);
-		ui.createExpenseArea = new ExpensesEntryArea(that._expensesService, that.createExpenseArea);
-		ui.recentExpenses = new RecentExpensesTable(that, ui, that._expensesService.createStore(), that.recentExpenses);
+		ui.createItemArea = new ItemEntryArea(that._storageService, that.createExpenseArea);
+		ui.recentExpenses = new RecentExpensesTable(that, ui, that._storageService.createStore(), that.recentExpenses);
 		ui.expensesDateFilterDialog = new DateFilterDialog();
 		ui.expensesDateFilterDialog.setLauncher(that.expensesDateFilterLauncher);
 		ui.expensesDateFilterDialog.on("ft:filterChange", function(filter) {
 			that.emit("ft:filterChange", filter);
 		});
-		ui.expenseEditDialog = new ExpenseEditDialog(that._expensesService, that.editExpenseDialog);
+		ui.itemEditDialog = new ItemEditDialog(that._storageService, that.editExpenseDialog);
 		ui.importExpensesDialog = that.importExpensesDialog;
-		ui.importExpensesDialog.setExpensesService(that._expensesService);
+		ui.importExpensesDialog.setExpensesService(that._storageService);
 		on(that.importCsv, "click", function(ev) {
 			ui.importExpensesDialog.show();
 			ev.preventDefault();
@@ -125,7 +122,7 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 
 	function RecentExpensesTable(that, ui, couchStore, element) {
 		dojo.removeClass(element, "hidden");
-//		var couchStore = expensesService.createStore();
+//		var couchStore = storageService.createStore();
 		var query = "_design/logic/_view/byDate?"; 
 		var queryArgs = {};
 		var grid = dojox.grid.EnhancedGrid({store: couchStore,
@@ -178,7 +175,7 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 				return;//TODO don't allow this method to be called when multiple items selected
 			}
 			var selItem = grid.selection.getSelected()[0];
-			ui.expenseEditDialog.edit(getPlainObject(selItem));
+			ui.itemEditDialog.edit(getPlainObject(selItem));
 		}
 
 
@@ -187,7 +184,7 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 			var selItems = grid.selection.getSelected();
 			if(confirm("Do you really want to remove following expenses?\n" +
 				shortExpenseInfo(selItems).join("\n"))) {
-				that._expensesService.remove(selItems).then(function() {
+				that._storageService.remove(selItems).then(function() {
 					grid.selection.clear();
 				});
 			}
@@ -215,7 +212,7 @@ function(declare, lang, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
 
 		_settings: {},
 
-		_expensesService: null, //to be defined in subclass
+		_storageService: null, //to be defined in subclass
 
 		_ItemFormComponent: null, //to be defined in subclass
 

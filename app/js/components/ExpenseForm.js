@@ -17,12 +17,12 @@ define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin", "diji
 				}
 			},
 
-			_setExpenseAttr: function(expense) {
+			_setItemAttr: function(expense) {
 				this._originalExpense = expense; 
 				this.set("value", expense);
 			},
 
-			_getExpenseAttr: function() {
+			_getItemAttr: function() {
 				var expense;
 				if(this._originalExpense) {
 					expense = lang.clone(this._originalExpense);
@@ -37,6 +37,17 @@ define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin", "diji
 			reset: function() {
 				this.inherited(arguments);
 				this._originalExpense = null;
+			},
+
+			initInput: function() {
+				this.set("categoriesMap", fintracker.categories);
+				this.expDate.set("value", new Date());
+			},
+
+			clearAfterInput: function() {
+				this.amount.reset();
+				this.category.reset();
+				this.comment.reset();
 			}
         });
 }); 
